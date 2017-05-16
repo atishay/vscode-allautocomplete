@@ -11,10 +11,10 @@ const MIN_WORD_LENGTH = 3;
 const MAX_LINES = 9999;
 const WHITESPACE_SPLITTER = /[^\w+]/g;
 const APPLY_OPEN_DOCS_HACK = true;
-const SHOW_CURRENT_DOCUMENT = true;
-//exclude_from_completion
+const SHOW_CURRENT_DOCUMENT = false;
+const EXCLUDE_FROM_COMPLETION = /$^/;
 
-let wordList: Array<{ document: TextDocument, words: {find: Function} }> = [];
+let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
 
 /**
  * Implements the CompletionItem returned by autocomplete
@@ -54,8 +54,13 @@ const provider = {
         var pos = new Position(position.line, i);
         let word = document.getText(new Range(pos, position))
         let results = [];
-        wordList.forEach((item) => {
-            let words = item.words.find(word);
+        wordList.forEach((trie, doc) => {
+            if (!SHOW_CURRENT_DOCUMENT) {
+                if (doc === document) {
+                    return;
+                }
+            }
+            let words = trie.find(word);
             if (words) {
                 results = results.concat(words);
             }
@@ -81,13 +86,18 @@ function parseDocument(document: TextDocument) {
             addWord(word, trie, document.fileName);
         });
     }
-    wordList.push({
-        document: document,
-        words: trie
-    });
+    wordList.set(document, trie);
 }
 
-function addWord(word, trie, fileName) {
+/**
+ * Add word to the autocomplete list
+ *
+ * @param {string} word
+ * @param {any} trie
+ * @param {string} fileName
+ */
+function addWord(word:string, trie:any, fileName:string) {
+    console.log("Adding word", word)
     if (word.length >= MIN_WORD_LENGTH) {
         let item = trie.find(word);
         if (item && item[0]) {
@@ -102,7 +112,13 @@ function addWord(word, trie, fileName) {
     }
 }
 
-function removeWord(word, trie) {
+/**
+ * Remove word from the search index.
+ *
+ * @param {string} word
+ * @param {any} trie
+ */
+function removeWord(word:string, trie) {
     if (word.length >= MIN_WORD_LENGTH) {
         let item = trie.find(word)[0];
         if (item && item[0]) {
@@ -150,43 +166,43 @@ function findActiveDocsHack() {
     });
 }
 
+let content = [];
+/**
+ * Utility class to manage the active document
+ *
+ * @class ActiveDocManager
+ */
 class ActiveDocManager {
-    static _activeDoc: TextDocument;
-    static activeText: string[];
-    static activeIndex: any;
-    static _transaction = false;
-    static setActiveDoc(doc: TextDocument) {
-        ActiveDocManager._activeDoc = doc;
-        let i = -1;
-        wordList.some((item, index) => {
-            if (item.document === doc) {
-                i = index;
-                return true;
-            }
-        });
-        ActiveDocManager.activeIndex = wordList[i];
-        if (doc) {
-            ActiveDocManager.activeText = doc.getText().split(doc.eol === vscode.EndOfLine.LF ? "\n" : "\r\n");
+    static beginTransaction() { }
+    static endTransaction() {
+        ActiveDocManager.updateContent();
+    }
+    static updateContent() {
+        content = [];
+        let doc = window.activeTextEditor.document;
+        for (let i = 0; i < doc.lineCount; ++i) {
+            content.push(doc.lineAt(i).text);
         }
     }
-
-    static beginTransaction() {
-        ActiveDocManager._transaction = true;
-    }
-
-    static endTransaction() {
-        ActiveDocManager._transaction = false;
-        const doc = ActiveDocManager._activeDoc;
-        ActiveDocManager.activeText = doc.getText().split(doc.eol === vscode.EndOfLine.LF ? "\n" : "\r\n");
-    }
-
+    /**
+     * Gets content replacement information for range replacement
+     *
+     * @static
+     * @param {Range} r
+     * @param {string} newText
+     * @returns {new:string, old:string}
+     *
+     * @memberof ActiveDocManager
+     */
     static replace(r: Range, newText: string): any {
+        // TODO New Text has whitespace at first position
+
+        // let doc = window.activeTextEditor.document;
         // Find old text
-        let doc = ActiveDocManager.activeText;
-        console.log(ActiveDocManager._activeDoc.lineAt(r.start.line).text);
-        let line:string = doc[r.start.line] || "";
-        //let startChar = line.substr(0, r.start.character);
+        let line: string = content[r.start.line] || "";
         // Get the closest space to the left and right;
+
+        // Start is the actual start wordIndex
         let start: number;
         for (start = r.start.character; start > 0; --start) {
             if ((line[start] || "").match(WHITESPACE_SPLITTER)) {
@@ -194,89 +210,84 @@ class ActiveDocManager {
                 break;
             }
         }
-        // start is the actual start wordIndex
+
+        // End is the actual end wordIndex
         let end: number;
-        let nLine = doc[r.end.line];
+        let nLine = content[r.end.line] || "";
         for (end = r.end.character; end < nLine.length; ++end) {
             if ((nLine[end] || "").match(/\s/)) {
                 end = end;
                 break;
             }
         }
-        // end is the actual end wordIndex
-        let oldText, nwText;
+
+        let oldText;
         if (r.isSingleLine) {
             oldText = line.substring(start, end);
         } else {
             let oldText = nLine.substring(start);
             for (let i = r.start.line + 1; i < r.end.line; ++i) {
-                oldText += "\n" + doc[line];
+                oldText += "\n" + content[i];
             }
             oldText += nLine.substring(0, end);
         }
-        nwText = line.substring(start, r.start.character) + newText + nLine.substring(end, r.end.character);
-        if (!ActiveDocManager._transaction) {
-            // Since we do not have a transaction lets do the changes now.
-            if (r.isSingleLine) {
-                // newText can have a newline character
-                doc[r.start.line] = line.substring(0, r.start.character) + newText + nLine.substring(r.end.character);
-            }
-        }
+        const nwText = line.substring(start, r.start.character) + newText + nLine.substring(end, r.end.character);
+
         return {
             old: oldText.split(WHITESPACE_SPLITTER),
             new: nwText.split(WHITESPACE_SPLITTER)
         };
     }
+    /**
+     * Handle content changes to active document
+     *
+     * @static
+     * @param {TextDocumentChangeEvent} e
+     * @returns
+     *
+     * @memberof ActiveDocManager
+     */
     static handleContextChange(e: TextDocumentChangeEvent) {
-        let changes = e.contentChanges;
-        let doc = e.document;
-        if (!ActiveDocManager.activeIndex) {
+        const activeIndex = wordList.get(e.document);
+        if (!activeIndex) {
             console.log("No index found");
             return;
         }
-        if (doc !== ActiveDocManager._activeDoc) {
+        if (e.document !== window.activeTextEditor.document) {
             console.log("Unexpected Active Doc. Parsing broken");
             return;
         }
-        if (changes.length > 1) {
-            ActiveDocManager.beginTransaction();
-        }
-        changes.forEach((change) => {
+        ActiveDocManager.beginTransaction();
+        e.contentChanges.forEach((change) => {
             let diff = ActiveDocManager.replace(change.range, change.text);
             diff.old.forEach((string) => {
-                removeWord(string, ActiveDocManager.activeIndex.words);
+                removeWord(string, activeIndex);
             });
             diff.new.forEach((string) => {
-                addWord(string, ActiveDocManager.activeIndex.words, doc.fileName);
+                console.log(string, " is to be added")
+                addWord(string, activeIndex, e.document.fileName);
             })
         });
-        if (changes.length > 1) {
-            ActiveDocManager.endTransaction();
-        }
+        ActiveDocManager.endTransaction();
     }
 }
 
+/**
+ * Mark all words when the active document changes.
+ */
 function attachActiveDocListener() {
     window.onDidChangeActiveTextEditor((newDoc: TextEditor) => {
-        ActiveDocManager.setActiveDoc(newDoc.document);
+        ActiveDocManager.updateContent();
     });
-    ActiveDocManager.setActiveDoc(window.activeTextEditor ? window.activeTextEditor.document: null)
+    ActiveDocManager.updateContent();
 }
-
 /**
  * Removes the document from the list of indexed documents.
  *
  * @param {TextDocument} document
  */
 function clearDocument(document: TextDocument) {
-    let i = -1;
-    wordList.some((item, index) => {
-        if (item.document === document) {
-            i = index;
-            return true;
-        }
-    });
-    wordList = wordList.splice(i, 1);
+    wordList.delete(document);
 }
 
 /**
@@ -297,7 +308,6 @@ export function activate(context: vscode.ExtensionContext) {
         clearDocument(document);
     });
 
-    // TODO(atjain); Apply diff on change
     workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
         ActiveDocManager.handleContextChange(e);
     });
@@ -310,11 +320,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     for (let i = 0; i < workspace.textDocuments.length; ++i) {
         // Parse all words in this document
-        // All open editors are not available: https://github.com/Microsoft/vscode/issues/15178
-
         parseDocument(workspace.textDocuments[i]);
     }
 
+    // All open editors are not available: https://github.com/Microsoft/vscode/issues/15178
     if (APPLY_OPEN_DOCS_HACK) {
         findActiveDocsHack().then(attachActiveDocListener);
     } else {
@@ -328,5 +337,5 @@ export function activate(context: vscode.ExtensionContext) {
  * @export
  */
 export function deactivate() {
-    wordList = [];
+    wordList.clear();
 }
