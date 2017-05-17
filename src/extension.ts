@@ -4,19 +4,26 @@
 import * as vscode from 'vscode';
 import * as Trie from 'triejs';
 import * as path from 'path';
+import * as minimatch from 'minimatch';
 import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, TextEditor, window } from "vscode";
 
-// https://github.com/Microsoft/vscode/issues/12115
+const Settings: any = {};
 
-const MIN_WORD_LENGTH = 3;
-const MAX_LINES = 9999;
-const WHITESPACE_SPLITTER = /[^\w+]/g;
-const APPLY_OPEN_DOCS_HACK = true;
-const SHOW_CURRENT_DOCUMENT = false;
-const EXCLUDE_FROM_COMPLETION = [".git"];
-const PERFORM_LIVE_UPDATE = true;
-const IGNORE_LIST = [];
-const TRIGGER_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+/**
+ * Utility function to load all settings
+ */
+function loadConfiguration() {
+    const config = vscode.workspace.getConfiguration('AllAutocomplete');
+    Settings.minWordLength = config.get("minWordLength", 3);
+    Settings.maxLines = config.get("maxLines", 9999);
+    Settings.whitespaceSplitter = new RegExp(config.get("whitespace", "^\\w+"), "g");
+    Settings.triggerCharacters = config.get("trigger", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    Settings.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch", false);
+    Settings.showCurrentDocument = config.get("showCurrentDocument", true);
+    Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
+    Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
+    Settings.excludeFiles = config.get("excludeFiles", "*.git");
+}
 
 let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
 
@@ -52,16 +59,16 @@ const provider = {
     provideCompletionItems(document: TextDocument, position: Position, token: vscode.CancellationToken) {
         let line = document.lineAt(position.line).text, i = 0;
         for (i = position.character; i > 0; --i) {
-            if ((line[i] || "").match(WHITESPACE_SPLITTER)) {
+            if ((line[i] || "").match(Settings.whitespaceSplitter)) {
                 break;
             }
         }
         var pos = new Position(position.line, i);
         let word = document.getText(new Range(pos, position));
-        word = word.replace(WHITESPACE_SPLITTER, '');
+        word = word.replace(Settings.whitespaceSplitter, '');
         let results = [];
         wordList.forEach((trie, doc) => {
-            if (!SHOW_CURRENT_DOCUMENT) {
+            if (!Settings.showCurrentDocument) {
                 if (doc === document) {
                     return;
                 }
@@ -89,16 +96,14 @@ const provider = {
  * @param {TextDocument} document
  */
 function parseDocument(document: TextDocument) {
-    if (EXCLUDE_FROM_COMPLETION.indexOf(path.extname(document.fileName)) !== -1) {
+    if (minimatch(document.fileName, Settings.excludeFiles)) {
         return;
     }
     const trie = new Trie({ enableCache: false });
-    // TODO(atjain): Can use a web worker here if needed.
-    for (let i = 0; i < Math.min(MAX_LINES, document.lineCount); ++i) {
+    for (let i = 0; i < Math.min(Settings.maxLines, document.lineCount); ++i) {
         const line = document.lineAt(i);
         const text = line.text;
-        // TODO(atjain): Add option for whitespace splitter
-        const words = text.split(WHITESPACE_SPLITTER);
+        const words = text.split(Settings.whitespaceSplitter);
         words.forEach((word) => {
             addWord(word, trie, document.fileName);
         });
@@ -114,9 +119,9 @@ function parseDocument(document: TextDocument) {
  * @param {string} fileName
  */
 function addWord(word:string, trie:any, fileName:string) {
-    word = word.replace(WHITESPACE_SPLITTER, '');
-    if (IGNORE_LIST.indexOf(word) !== -1) return;
-    if (word.length >= MIN_WORD_LENGTH) {
+    word = word.replace(Settings.whitespaceSplitter, '');
+    if (Settings.ignoredWords.indexOf(word) !== -1) return;
+    if (word.length >= Settings.minWordLength) {
         let item = trie.find(word);
         if (item && item[0]) {
             item = item[0];
@@ -137,7 +142,7 @@ function addWord(word:string, trie:any, fileName:string) {
  * @param {any} trie
  */
 function removeWord(word:string, trie) {
-    if (word.length >= MIN_WORD_LENGTH) {
+    if (word.length >= Settings.minWordLength) {
         let item = trie.find(word)[0];
         if (item && item[0]) {
             item = item[0];
@@ -198,7 +203,7 @@ class ActiveDocManager {
     static updateContent() {
         content = [];
         let doc = window.activeTextEditor.document;
-        if (EXCLUDE_FROM_COMPLETION.indexOf(path.extname(doc.fileName)) !== -1) {
+        if (Settings.excludeFiles.indexOf(path.extname(doc.fileName)) !== -1) {
             return;
         }
         for (let i = 0; i < doc.lineCount; ++i) {
@@ -223,7 +228,7 @@ class ActiveDocManager {
         // Start is the actual start wordIndex
         let start: number;
         for (start = r.start.character; start > 0; --start) {
-            if ((line[start] || "").match(WHITESPACE_SPLITTER)) {
+            if ((line[start] || "").match(Settings.whitespaceSplitter)) {
                 start = start + 1;
                 break;
             }
@@ -252,8 +257,8 @@ class ActiveDocManager {
         const nwText = line.substring(start, r.start.character) + newText + nLine.substring(end, r.end.character);
 
         return {
-            old: oldText.split(WHITESPACE_SPLITTER),
-            new: nwText.split(WHITESPACE_SPLITTER)
+            old: oldText.split(Settings.whitespaceSplitter),
+            new: nwText.split(Settings.whitespaceSplitter)
         };
     }
     /**
@@ -289,15 +294,24 @@ class ActiveDocManager {
     }
 }
 
+function handleNewActiveEditor() {
+    if (Settings.showCurrentDocument) {
+        ActiveDocManager.updateContent();
+    } else {
+        clearDocument(window.activeTextEditor.document);
+        parseDocument(window.activeTextEditor.document);
+    }
+}
+
 /**
  * Mark all words when the active document changes.
  */
 function attachActiveDocListener() {
-    if (PERFORM_LIVE_UPDATE) {
+    if (!Settings.updateOnlyOnSave) {
         window.onDidChangeActiveTextEditor((newDoc: TextEditor) => {
-            ActiveDocManager.updateContent();
+            handleNewActiveEditor();
         });
-        ActiveDocManager.updateContent();
+        handleNewActiveEditor();
     }
 }
 /**
@@ -316,8 +330,13 @@ function clearDocument(document: TextDocument) {
  * @param {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
-    const triggerCharacters = TRIGGER_CHARACTERS.split('');
-    vscode.languages.registerCompletionItemProvider('*', provider, ...triggerCharacters)
+    loadConfiguration();
+
+    const triggerCharacters = Settings.triggerCharacters.split('');
+    vscode.languages.registerCompletionItemProvider('*', provider, ...triggerCharacters);
+    vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
+        findActiveDocsHack();
+    });
 
     workspace.onDidOpenTextDocument((document: TextDocument) => {
         parseDocument(document);
@@ -328,14 +347,14 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
-        if (EXCLUDE_FROM_COMPLETION.indexOf(path.extname(e.document.fileName))) {
+        if (Settings.excludeFiles.indexOf(path.extname(e.document.fileName))) {
             return;
         }
-        if (PERFORM_LIVE_UPDATE) {
+        if (!Settings.updateOnlyOnSave) {
             ActiveDocManager.handleContextChange(e);
         }
     });
-    if (!PERFORM_LIVE_UPDATE) {
+    if (Settings.updateOnlyOnSave) {
         workspace.onDidSaveTextDocument((document: TextDocument) => {
             clearDocument(document);
             parseDocument(document);
@@ -348,7 +367,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     // All open editors are not available: https://github.com/Microsoft/vscode/issues/15178
-    if (APPLY_OPEN_DOCS_HACK) {
+    if (Settings.cycleOpenDocumentsOnLaunch) {
         findActiveDocsHack().then(attachActiveDocListener);
     } else {
         attachActiveDocListener();
@@ -362,4 +381,5 @@ export function activate(context: vscode.ExtensionContext) {
  */
 export function deactivate() {
     wordList.clear();
+    content = [];
 }

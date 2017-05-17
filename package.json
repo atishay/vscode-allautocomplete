@@ -1,6 +1,6 @@
 {
     "name": "vscode-allautocomplete",
-    "displayName": "AllAutocomplete",
+    "displayName": "All Autocomplete",
     "description": "Based on Sublime's AllAutocomplete, this plugin fills the autocomplete list frm all open files. ",
     "version": "0.0.1",
     "publisher": "Atishay-Jain",
@@ -13,6 +13,65 @@
     "activationEvents": [
         "*"
     ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "AllAutocomplete.cycleDocuments",
+                "title": "Cycle Open Editors",
+                "category": "All Autocomplete"
+            }
+        ],
+        "configuration": {
+            "title": "All Autocomplete",
+            "properties": {
+                "AllAutocomplete.minWordLength": {
+                    "type": "number",
+                    "default": 3,
+                    "description": "All Autocomplete: Minimum word length to keep in autocomplete list."
+                },
+                "AllAutocomplete.maxLines": {
+                    "type": "number",
+                    "default": 9999,
+                    "description": "All Autocomplete: Maximum number of lines to read from a file."
+                },
+                "AllAutocomplete.whitespace": {
+                    "type": "string",
+                    "default": "[^\\w+]",
+                    "description": "All Autocomplete: Regex to use for splitting whitespace"
+                },
+                "AllAutocomplete.trigger": {
+                    "type": "string",
+                    "default": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+                    "description": "All Autocomplete: Characters used to trigger all autocomplete"
+                },
+                "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Cycles through open documents on launch to enable autocomplete to include those documents on restore. (VSCode Issue#15178)"
+                },
+                "AllAutocomplete.showCurrentDocument": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show results from the current document in the autocomplete results(Disable to improve performance)."
+                },
+                "AllAutocomplete.ignoredWords": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete."
+                },
+                "AllAutocomplete.updateOnlyOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Do not update the autocomplete list unless the document is saved."
+                },
+                "AllAutocomplete.excludeFiles": {
+                    "type": "string",
+                    "default": "*.git",
+                    "description": "Glob pattern for files to exclude from autocomplete search."
+                }
+            }
+        }
+    },
     "main": "./out/src/extension",
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
@@ -21,7 +80,8 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "dependencies": {
-        "triejs": "0.1.5"
+        "triejs": "0.1.5",
+        "minimatch": "3.0.4"
     },
     "devDependencies": {
         "typescript": "^2.0.3",
