@@ -41,7 +41,7 @@ function loadConfiguration() {
     Settings.showCurrentDocument = config.get("showCurrentDocument", true);
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
     Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
-    Settings.excludeFiles = config.get("excludeFiles", "**/*.git");
+    Settings.excludeFiles = config.get("excludeFiles", "(**/*.git)|settings");
 }
 
 /**
@@ -313,6 +313,7 @@ class ActiveDocManager {
             console.log("Unexpected Active Doc. Parsing broken");
             return;
         }
+        // TODO: Optimize the special case of single character single line.
         ActiveDocManager.beginTransaction();
         e.contentChanges.forEach((change) => {
             let diff = ActiveDocManager.replace(change.range, change.text);

@@ -90,7 +90,7 @@
                 },
                 "AllAutocomplete.excludeFiles": {
                     "type": "string",
-                    "default": "**/*.git",
+                    "default": "(**/*.git)|settings",
                     "description": "Glob pattern for files to exclude from autocomplete search."
                 }
             }
