@@ -1,11 +1,9 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as Trie from 'triejs';
 import * as path from 'path';
 import * as minimatch from 'minimatch';
-import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, TextEditor, window } from "vscode";
+import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, window } from "vscode";
 
 const Settings: any = {};
 
@@ -22,7 +20,15 @@ function loadConfiguration() {
     Settings.showCurrentDocument = config.get("showCurrentDocument", true);
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
     Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
-    Settings.excludeFiles = config.get("excludeFiles", "*.git");
+    Settings.excludeFiles = config.get("excludeFiles", "**/*.git");
+}
+
+/**
+ * Utility function to get path relative to the workspace root
+ */
+function relativePath(filePath: string) {
+    if (!workspace.rootPath) { return filePath; }
+    return path.relative(workspace.rootPath, filePath);
 }
 
 let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
@@ -42,7 +48,7 @@ class CompletionItem extends vscode.CompletionItem {
         this.kind = vscode.CompletionItemKind.Text;
         this.count = 1;
         this.file = file;
-        this.detail = `${path.basename(file)}`;
+        this.detail = `${relativePath(file)}`;
     }
 }
 
@@ -96,9 +102,10 @@ const provider = {
  * @param {TextDocument} document
  */
 function parseDocument(document: TextDocument) {
-    if (minimatch(document.fileName, Settings.excludeFiles)) {
+    if (minimatch(relativePath(document.fileName), Settings.excludeFiles)) {
         return;
     }
+    console.log(relativePath(document.fileName));
     const trie = new Trie({ enableCache: false });
     for (let i = 0; i < Math.min(Settings.maxLines, document.lineCount); ++i) {
         const line = document.lineAt(i);
@@ -203,7 +210,7 @@ class ActiveDocManager {
     static updateContent() {
         content = [];
         let doc = window.activeTextEditor.document;
-        if (Settings.excludeFiles.indexOf(path.extname(doc.fileName)) !== -1) {
+        if (minimatch(relativePath(doc.fileName), Settings.excludeFiles)) {
             return;
         }
         for (let i = 0; i < doc.lineCount; ++i) {
@@ -308,7 +315,7 @@ function handleNewActiveEditor() {
  */
 function attachActiveDocListener() {
     if (!Settings.updateOnlyOnSave) {
-        window.onDidChangeActiveTextEditor((newDoc: TextEditor) => {
+        window.onDidChangeActiveTextEditor((newDoc: vscode.TextEditor) => {
             handleNewActiveEditor();
         });
         handleNewActiveEditor();
@@ -350,7 +357,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (Settings.excludeFiles.indexOf(path.extname(e.document.fileName))) {
             return;
         }
-        if (!Settings.updateOnlyOnSave) {
+        if (!Settings.updateOnlyOnSave && !Settings.showCurrentDocument) {
             ActiveDocManager.handleContextChange(e);
         }
     });

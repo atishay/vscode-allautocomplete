@@ -1,9 +1,10 @@
 {
-    "name": "vscode-allautocomplete",
+    "name": "vscode-All-Autocomplete",
     "displayName": "All Autocomplete",
-    "description": "Based on Sublime's AllAutocomplete, this plugin fills the autocomplete list frm all open files. ",
+    "description": "Create autocomplete items from open files in VSCode.",
     "version": "0.0.1",
     "publisher": "Atishay-Jain",
+    "license": "MIT",
     "engines": {
         "vscode": "^1.12.0"
     },
@@ -66,7 +67,7 @@
                 },
                 "AllAutocomplete.excludeFiles": {
                     "type": "string",
-                    "default": "*.git",
+                    "default": "**/*.git",
                     "description": "Glob pattern for files to exclude from autocomplete search."
                 }
             }
