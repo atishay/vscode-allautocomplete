@@ -129,7 +129,6 @@ function parseDocument(document: TextDocument) {
     if (minimatch(relativePath(document.fileName), Settings.excludeFiles)) {
         return;
     }
-    console.log(relativePath(document.fileName));
     const trie = new Trie({ enableCache: false });
     for (let i = 0; i < Math.min(Settings.maxLines, document.lineCount); ++i) {
         const line = document.lineAt(i);
