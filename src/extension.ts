@@ -42,7 +42,7 @@ function loadConfiguration() {
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
     Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
     Settings.excludeFiles = config.get("excludeFiles", "**/*.git");
-    Settings.buildInFilesToExclude = ["settings"];
+    Settings.buildInFilesToExclude = ["settings", "settings/editor"];
 }
 
 function shouldExcludeFile(file: string): boolean {
