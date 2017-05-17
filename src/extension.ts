@@ -57,7 +57,8 @@ const provider = {
             }
         }
         var pos = new Position(position.line, i);
-        let word = document.getText(new Range(pos, position))
+        let word = document.getText(new Range(pos, position));
+        word = word.replace(WHITESPACE_SPLITTER, '');
         let results = [];
         wordList.forEach((trie, doc) => {
             if (!SHOW_CURRENT_DOCUMENT) {
@@ -215,9 +216,6 @@ class ActiveDocManager {
      * @memberof ActiveDocManager
      */
     static replace(r: Range, newText: string): any {
-        // TODO New Text has whitespace at first position
-
-        // let doc = window.activeTextEditor.document;
         // Find old text
         let line: string = content[r.start.line] || "";
         // Get the closest space to the left and right;
