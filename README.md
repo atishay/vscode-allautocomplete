@@ -33,10 +33,13 @@ Upon restoring Visual Studio, the documents that have never been opened do not a
 Click on open tabs to enable them in the document. Alternatively, you can use the Cmd+P menu and select "Cycle Open Editors". You can enable this to be done on launch with "AllAutocomplete.cycleOpenDocumentsOnLaunch".
 
 ## Performance Impact
+* When using real-time mode by setting `AllAutocomplete.showCurrentDocument` = `true`, the plugin tries to update the index on each addition/deletion.
+* When `AllAutocomplete.showCurrentDocument` = `false`, the index updates itself on each change to focussed editor.
+* When `AllAutocomplete.updateOnlyOnSave` = `true`, the index is updated only on save and open/close of documents.
 
 ## Release Notes
 
-### 1.0.0
+### 0.0.1
 Initial Release. Supports autocomplete based on all open files with real time updates.
 
 **Enjoy!**

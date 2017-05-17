@@ -11,6 +11,23 @@
     "categories": [
         "Other"
     ],
+    "keywords": [
+        "autocomplete",
+        "open files",
+        "all autocomplete"
+    ],
+    "galleryBanner": {
+        "color": "#5F889E",
+        "theme": "light"
+    },
+    "bugs": {
+        "url": "https://github.com/atishay/vscode-allautocomplete/issues"
+    },
+    "homepage": "https://github.com/atishay/vscode-allautocomplete",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/atishay/vscode-allautocomplete.git"
+    },
     "activationEvents": [
         "*"
     ],
