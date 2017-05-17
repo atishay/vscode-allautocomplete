@@ -46,7 +46,7 @@ function loadConfiguration() {
 }
 
 function shouldExcludeFile(file: string): boolean {
-    if (Settings.buildInFilesToExclude().indexOf(file) !== -1) {
+    if (Settings.buildInFilesToExclude.indexOf(file) !== -1) {
         return true;
     }
     return minimatch(relativePath(file), Settings.excludeFiles);
@@ -235,7 +235,10 @@ let content = [];
  */
 class ActiveDocManager {
     static beginTransaction() { }
-    static endTransaction() {
+    static endTransaction(updated: boolean) {
+        if (updated) {
+            return;
+        }
         ActiveDocManager.updateContent();
     }
     static updateContent() {
@@ -261,7 +264,7 @@ class ActiveDocManager {
      *
      * @memberof ActiveDocManager
      */
-    static replace(r: Range, newText: string): any {
+    static replace(r: Range, newText: string, noOfChangesInTransaction: number): any {
         // Find old text
         let line: string = content[r.start.line] || "";
         // Get the closest space to the left and right;
@@ -295,11 +298,23 @@ class ActiveDocManager {
             }
             oldText += nLine.substring(0, end);
         }
-        const nwText = line.substring(start, r.start.character) + newText + nLine.substring(end, r.end.character);
+        const nwText = line.substring(start, r.start.character) + newText + nLine.substring(r.end.character, end);
+        let updated = false;
+        if (noOfChangesInTransaction === 1 && r.isSingleLine) {
+            // Special case. Optimize for a single cursor in a single line as that is too frequent to do a re-read.
+            const newLine = line.substring(0, r.start.character) + newText + nLine.substring(r.end.character);
+            const n = newLine.split(window.activeTextEditor.document.eol === vscode.EndOfLine.LF ? "\n" : "\r\n");
+            content[r.start.line] = n[0];
+            for (let i = 1; i < n.length; ++i) {
+                content.splice(r.start.line + i, 0, n[i]);
+            }
+            updated = true;
+        }
 
         return {
             old: oldText.split(Settings.whitespaceSplitter),
-            new: nwText.split(Settings.whitespaceSplitter)
+            new: nwText.split(Settings.whitespaceSplitter),
+            updated: updated
         };
     }
     /**
@@ -321,18 +336,19 @@ class ActiveDocManager {
             console.log("Unexpected Active Doc. Parsing broken");
             return;
         }
-        // TODO: Optimize the special case of single character single line.
         ActiveDocManager.beginTransaction();
+        let updated = true;
         e.contentChanges.forEach((change) => {
-            let diff = ActiveDocManager.replace(change.range, change.text);
+            let diff = ActiveDocManager.replace(change.range, change.text, e.contentChanges.length);
             diff.old.forEach((string) => {
                 removeWord(string, activeIndex);
             });
             diff.new.forEach((string) => {
                 addWord(string, activeIndex, e.document.fileName);
-            })
+            });
+            updated = updated && diff.updated;
         });
-        ActiveDocManager.endTransaction();
+        ActiveDocManager.endTransaction(updated);
     }
 }
 let olderActiveDocument:TextDocument;

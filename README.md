@@ -37,12 +37,4 @@ Click on open tabs to enable them in the document. Alternatively, you can use th
 * When `AllAutocomplete.showCurrentDocument` = `false`, the index updates itself on each change to focussed editor.
 * When `AllAutocomplete.updateOnlyOnSave` = `true`, the index is updated only on save and open/close of documents.
 
-## Release Notes
-
-### 0.0.2
-Update description and icon.
-
-### 0.0.1
-Initial Release. Supports autocomplete based on all open files with real time updates.
-
 **Enjoy!**
