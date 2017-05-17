@@ -94,7 +94,7 @@ const provider = {
      */
     provideCompletionItems(document: TextDocument, position: Position, token: vscode.CancellationToken) {
         let line = document.lineAt(position.line).text, i = 0;
-        for (i = position.character; i > 0; --i) {
+        for (i = position.character - 1; i > 0; --i) {
             if ((line[i] || "").match(Settings.whitespaceSplitter)) {
                 break;
             }
