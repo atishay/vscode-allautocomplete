@@ -2,7 +2,7 @@
     "name": "All-Autocomplete",
     "displayName": "All Autocomplete",
     "description": "Create autocomplete items from open files in VSCode.",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
@@ -90,7 +90,7 @@
                 },
                 "AllAutocomplete.excludeFiles": {
                     "type": "string",
-                    "default": "**/*.git",
+                    "default": "(**/*.git)|(**/*.rendered)",
                     "description": "Glob pattern for files to exclude from autocomplete search."
                 }
             }

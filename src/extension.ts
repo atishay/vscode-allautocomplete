@@ -41,7 +41,7 @@ function loadConfiguration() {
     Settings.showCurrentDocument = config.get("showCurrentDocument", true);
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
     Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
-    Settings.excludeFiles = config.get("excludeFiles", "**/*.git");
+    Settings.excludeFiles = config.get("excludeFiles", "(**/*.git)|(**/*.rendered)");
     Settings.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
 }
 
