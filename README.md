@@ -4,7 +4,7 @@ Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vsc
 
 ## Features
 
-![All Autocomplete](images/All-Autocomplete.gif)
+![All Autocomplete](https://cdn.rawgit.com/atishay/vscode-allautocomplete/d62a2c5a6f68a5db59728cfea13c11fb7480fc92/images/All-Autocomplete.gif)
 
 ## Items in the Cmd+P Menu
 * `Toggle Suggestions From The Current File`
@@ -38,6 +38,9 @@ Click on open tabs to enable them in the document. Alternatively, you can use th
 * When `AllAutocomplete.updateOnlyOnSave` = `true`, the index is updated only on save and open/close of documents.
 
 ## Release Notes
+
+### 0.0.2
+Update description and icon.
 
 ### 0.0.1
 Initial Release. Supports autocomplete based on all open files with real time updates.
