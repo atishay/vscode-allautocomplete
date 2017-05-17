@@ -1,10 +1,12 @@
-# allautocomplete README
+# VSCode All Autocomplete
+
+Provides autocompletion items based on all open editors.
+
+//TODO: Add gif
+
 https://github.com/Microsoft/vscode/issues/12115
 
 https://github.com/Microsoft/vscode/issues/5312
-
-
-This is the README for your extension "allautocomplete". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

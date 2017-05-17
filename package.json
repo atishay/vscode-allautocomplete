@@ -21,9 +21,7 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "dependencies": {
-        "autosuggest-trie": "2.1.1",
-        "triejs": "0.1.5",
-        "radix-trie": "1.0.7"
+        "triejs": "0.1.5"
     },
     "devDependencies": {
         "typescript": "^2.0.3",

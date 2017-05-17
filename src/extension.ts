@@ -3,6 +3,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as Trie from 'triejs';
+import * as path from 'path';
 import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, TextEditor, window } from "vscode";
 
 // https://github.com/Microsoft/vscode/issues/12115
@@ -12,7 +13,10 @@ const MAX_LINES = 9999;
 const WHITESPACE_SPLITTER = /[^\w+]/g;
 const APPLY_OPEN_DOCS_HACK = true;
 const SHOW_CURRENT_DOCUMENT = false;
-const EXCLUDE_FROM_COMPLETION = /$^/;
+const EXCLUDE_FROM_COMPLETION = [".git"];
+const PERFORM_LIVE_UPDATE = true;
+const IGNORE_LIST = [];
+const TRIGGER_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
 
@@ -22,15 +26,16 @@ let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { fi
  * @class CompletionItem
  * @extends {vscode.CompletionItem}
  */
-class CompletionItem extends vscode.CompletionItem{
+class CompletionItem extends vscode.CompletionItem {
     file: string;
     line: number;
     count: number;
     constructor(word: string, file: string) {
         super(word);
+        this.kind = vscode.CompletionItemKind.Text;
         this.count = 1;
         this.file = file;
-        this.detail = `${file}`;
+        this.detail = `${path.basename(file)}`;
     }
 }
 
@@ -65,7 +70,15 @@ const provider = {
                 results = results.concat(words);
             }
         });
-        return results;
+        let clean = [], map = {};
+        // Deduplicate results now.
+        results.forEach((item) => {
+            if (!map[item.label]) {
+                clean.push(item);
+                map[item.label] = item;
+            }
+        });
+        return clean;
     }
 }
 
@@ -75,6 +88,9 @@ const provider = {
  * @param {TextDocument} document
  */
 function parseDocument(document: TextDocument) {
+    if (EXCLUDE_FROM_COMPLETION.indexOf(path.extname(document.fileName)) !== -1) {
+        return;
+    }
     const trie = new Trie({ enableCache: false });
     // TODO(atjain): Can use a web worker here if needed.
     for (let i = 0; i < Math.min(MAX_LINES, document.lineCount); ++i) {
@@ -97,14 +113,15 @@ function parseDocument(document: TextDocument) {
  * @param {string} fileName
  */
 function addWord(word:string, trie:any, fileName:string) {
-    console.log("Adding word", word)
+    word = word.replace(WHITESPACE_SPLITTER, '');
+    if (IGNORE_LIST.indexOf(word) !== -1) return;
     if (word.length >= MIN_WORD_LENGTH) {
         let item = trie.find(word);
         if (item && item[0]) {
             item = item[0];
         }
         if (item && item.label === word) {
-            item.count++
+            item.count++;
         } else {
             item = new CompletionItem(word, fileName);
             trie.add(word, item);
@@ -180,6 +197,9 @@ class ActiveDocManager {
     static updateContent() {
         content = [];
         let doc = window.activeTextEditor.document;
+        if (EXCLUDE_FROM_COMPLETION.indexOf(path.extname(doc.fileName)) !== -1) {
+            return;
+        }
         for (let i = 0; i < doc.lineCount; ++i) {
             content.push(doc.lineAt(i).text);
         }
@@ -264,7 +284,6 @@ class ActiveDocManager {
                 removeWord(string, activeIndex);
             });
             diff.new.forEach((string) => {
-                console.log(string, " is to be added")
                 addWord(string, activeIndex, e.document.fileName);
             })
         });
@@ -276,10 +295,12 @@ class ActiveDocManager {
  * Mark all words when the active document changes.
  */
 function attachActiveDocListener() {
-    window.onDidChangeActiveTextEditor((newDoc: TextEditor) => {
+    if (PERFORM_LIVE_UPDATE) {
+        window.onDidChangeActiveTextEditor((newDoc: TextEditor) => {
+            ActiveDocManager.updateContent();
+        });
         ActiveDocManager.updateContent();
-    });
-    ActiveDocManager.updateContent();
+    }
 }
 /**
  * Removes the document from the list of indexed documents.
@@ -297,7 +318,7 @@ function clearDocument(document: TextDocument) {
  * @param {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
-    const triggerCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.split('');
+    const triggerCharacters = TRIGGER_CHARACTERS.split('');
     vscode.languages.registerCompletionItemProvider('*', provider, ...triggerCharacters)
 
     workspace.onDidOpenTextDocument((document: TextDocument) => {
@@ -309,14 +330,19 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
-        ActiveDocManager.handleContextChange(e);
+        if (EXCLUDE_FROM_COMPLETION.indexOf(path.extname(e.document.fileName))) {
+            return;
+        }
+        if (PERFORM_LIVE_UPDATE) {
+            ActiveDocManager.handleContextChange(e);
+        }
     });
-
-    // workspace.onDidSaveTextDocument((document: TextDocument) => {
-    //     // Optimize this
-    //     clearDocument(document);
-    //     parseDocument(document);
-    // });
+    if (!PERFORM_LIVE_UPDATE) {
+        workspace.onDidSaveTextDocument((document: TextDocument) => {
+            clearDocument(document);
+            parseDocument(document);
+        });
+    }
 
     for (let i = 0; i < workspace.textDocuments.length; ++i) {
         // Parse all words in this document
