@@ -42,6 +42,14 @@ function loadConfiguration() {
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
     Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
     Settings.excludeFiles = config.get("excludeFiles", "**/*.git");
+    Settings.buildInFilesToExclude = ["settings"];
+}
+
+function shouldExcludeFile(file: string): boolean {
+    if (Settings.buildInFilesToExclude().indexOf(file) !== -1) {
+        return true;
+    }
+    return minimatch(relativePath(file), Settings.excludeFiles);
 }
 
 /**
@@ -126,7 +134,7 @@ const provider = {
  * @param {TextDocument} document
  */
 function parseDocument(document: TextDocument) {
-    if (minimatch(relativePath(document.fileName), Settings.excludeFiles)) {
+    if (shouldExcludeFile(document.fileName)) {
         return;
     }
     const trie = new Trie({ enableCache: false });
@@ -236,7 +244,7 @@ class ActiveDocManager {
         }
         content = [];
         let doc = window.activeTextEditor.document;
-        if (minimatch(relativePath(doc.fileName), Settings.excludeFiles)) {
+        if (shouldExcludeFile(doc.fileName)) {
             return;
         }
         for (let i = 0; i < doc.lineCount; ++i) {
@@ -406,7 +414,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
-        if (minimatch(relativePath(e.document.fileName), Settings.excludeFiles)) {
+        if (shouldExcludeFile(e.document.fileName)) {
             return;
         }
         if (!Settings.updateOnlyOnSave && Settings.showCurrentDocument) {
