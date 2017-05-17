@@ -1,71 +1,42 @@
 # VSCode All Autocomplete
 
-Provides autocompletion items based on all open editors.
-
-//TODO: Add gif
-
-https://github.com/Microsoft/vscode/issues/12115
-
-https://github.com/Microsoft/vscode/issues/5312
+Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vscode) items based on all open editors.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
 \!\[feature X\]\(images/feature-x.png\)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Items in the Cmd+P Menu
+* `Toggle Suggestions From The Current File`
+* `Cycle Open Editors`
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+This extension has the following settings:
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `AllAutocomplete.minWordLength`: Minimum word length to keep in autocomplete list.
+* `AllAutocomplete.maxLines`: Maximum number of lines to read from a file.
+* `AllAutocomplete.whitespace`: Regex to use for splitting whitespace.
+* `AllAutocomplete.trigger`: Characters used to trigger all autocomplete.
+* `AllAutocomplete.cycleOpenDocumentsOnLaunch`: Cycles through open documents on launch to enable autocomplete to include those documents on restore.
+* `AllAutocomplete.showCurrentDocument`: Show results from the current document in the autocomplete results.
+* `AllAutocomplete.ignoredWords`: Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete.
+* `AllAutocomplete.updateOnlyOnSave`: Do not update the autocomplete list unless the document is saved.
+* `AllAutocomplete.excludeFiles`: Glob pattern for files to exclude from autocomplete search.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+### Documents do not show up in autocomplete on restore.
+
+Upon restoring Visual Studio, the documents that have never been opened do not appear in autocomplete. ([VSCode Issue#15178](https://github.com/Microsoft/vscode/issues/15178))
+
+Click on open tabs to enable them in the document. Alternatively, you can use the Cmd+P menu and select "Cycle Open Editors". You can enable this to be done on launch with "AllAutocomplete.cycleOpenDocumentsOnLaunch".
+
+## Performance Impact
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+Initial Release. Supports autocomplete based on all open files with real time updates.
 
 **Enjoy!**
