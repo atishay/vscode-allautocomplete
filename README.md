@@ -30,7 +30,7 @@ This extension has the following settings:
 
 Upon restoring Visual Studio, the documents that have never been opened do not appear in autocomplete. ([VSCode Issue#15178](https://github.com/Microsoft/vscode/issues/15178))
 
-Click on open tabs to enable them in the document. Alternatively, you can use the Cmd+P menu and select "Cycle Open Editors". You can enable this to be done on launch with "AllAutocomplete.cycleOpenDocumentsOnLaunch".
+Click on open tabs to enable them in the document. Alternatively, you can use the Cmd+P menu and select `Cycle Open Editors`. You can enable this to be done on launch with `AllAutocomplete.cycleOpenDocumentsOnLaunch`.
 
 ## Performance Impact
 * When using real-time mode by setting `AllAutocomplete.showCurrentDocument` = `true`, the plugin tries to update the index on each addition/deletion.
