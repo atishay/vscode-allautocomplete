@@ -4,7 +4,7 @@ Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vsc
 
 ## Features
 
-![All Autocomplete](images/All-Autocomplete.gif)
+![](https://cdn.rawgit.com/atishay/vscode-allautocomplete/1ea2b07b/images/All-Autocomplete.gif)
 
 ## Items in the Cmd+P Menu
 * `Toggle Suggestions From The Current File`
