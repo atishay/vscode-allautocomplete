@@ -2,7 +2,7 @@
     "name": "All-Autocomplete",
     "displayName": "All Autocomplete",
     "description": "Create autocomplete items from open files in VSCode.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
@@ -31,14 +31,15 @@
     "activationEvents": [
         "*"
     ],
-    "icon": "https://cdn.rawgit.com/atishay/vscode-allautocomplete/d62a2c5a6f68a5db59728cfea13c11fb7480fc92/images/icon.png",
+    "icon": "images/icon.png",
     "contributes": {
         "commands": [
             {
                 "command": "AllAutocomplete.cycleDocuments",
                 "title": "Cycle Open Editors",
                 "category": "All Autocomplete"
-            }, {
+            },
+            {
                 "command": "AllAutocomplete.toggleCurrentFile",
                 "title": "Toggle Suggestions From The Current File",
                 "category": "All Autocomplete"
