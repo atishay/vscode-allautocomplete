@@ -28,6 +28,7 @@ function loadConfiguration() {
  */
 function relativePath(filePath: string) {
     if (!workspace.rootPath) { return filePath; }
+    if (filePath.indexOf(path.sep) === -1) { return filePath; }
     return path.relative(workspace.rootPath, filePath);
 }
 
@@ -85,6 +86,8 @@ const provider = {
             }
         });
         let clean = [], map = {};
+        // Do not show the same word in autocomplete.
+        map[word] = {};
         // Deduplicate results now.
         results.forEach((item) => {
             if (!map[item.label]) {
@@ -300,13 +303,19 @@ class ActiveDocManager {
         ActiveDocManager.endTransaction();
     }
 }
-
+let olderActiveDocument:TextDocument;
+/**
+ * Handle setting of the new active document
+ */
 function handleNewActiveEditor() {
     if (Settings.showCurrentDocument) {
         ActiveDocManager.updateContent();
     } else {
-        clearDocument(window.activeTextEditor.document);
-        parseDocument(window.activeTextEditor.document);
+        if (olderActiveDocument) {
+            clearDocument(olderActiveDocument);
+            parseDocument(olderActiveDocument);
+        }
+        olderActiveDocument = window.activeTextEditor ? window.activeTextEditor.document: null;
     }
 }
 
@@ -344,20 +353,39 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
         findActiveDocsHack();
     });
+    vscode.commands.registerCommand("AllAutocomplete.toggleCurrentFile", () => {
+        const config = vscode.workspace.getConfiguration('AllAutocomplete');
+        if (Settings.showCurrentDocument) {
+            config.update("showCurrentDocument", false);
+            Settings.showCurrentDocument = false;
+        } else {
+            config.update("showCurrentDocument", true);
+            Settings.showCurrentDocument = true;
+            let currentDocument = window.activeTextEditor ? window.activeTextEditor.document : null;
+            if (currentDocument) {
+                clearDocument(currentDocument);
+                parseDocument(currentDocument);
+                ActiveDocManager.updateContent();
+            }
+        }
+    });
 
     workspace.onDidOpenTextDocument((document: TextDocument) => {
         parseDocument(document);
     });
 
     workspace.onDidCloseTextDocument((document: TextDocument) => {
+        if (olderActiveDocument === document) {
+            olderActiveDocument = null;
+        }
         clearDocument(document);
     });
 
     workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
-        if (Settings.excludeFiles.indexOf(path.extname(e.document.fileName))) {
+        if (minimatch(relativePath(e.document.fileName), Settings.excludeFiles)) {
             return;
         }
-        if (!Settings.updateOnlyOnSave && !Settings.showCurrentDocument) {
+        if (!Settings.updateOnlyOnSave && Settings.showCurrentDocument) {
             ActiveDocManager.handleContextChange(e);
         }
     });

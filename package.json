@@ -20,6 +20,10 @@
                 "command": "AllAutocomplete.cycleDocuments",
                 "title": "Cycle Open Editors",
                 "category": "All Autocomplete"
+            }, {
+                "command": "AllAutocomplete.toggleCurrentFile",
+                "title": "Toggle Suggestions From The Current File",
+                "category": "All Autocomplete"
             }
         ],
         "configuration": {
