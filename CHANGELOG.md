@@ -1,9 +1,12 @@
 # Change Log
 All notable changes to the "All Autocomplete" extension will be documented in this file.
 
+### 0.0.4
+*
+
 ### 0.0.3
 * Added optimization for the special case of normal typing.
-* Remove some vscode specific files from showing up. sh
+* Remove some vscode specific files from showing up.
 * Fix a bug where autocomplete was not working inside the if statement.
 
 ### 0.0.2

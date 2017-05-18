@@ -2,6 +2,8 @@
 
 Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vscode) items based on all open editors.
 
+Available at [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete).
+
 ## Features
 
 ![](https://cdn.rawgit.com/atishay/vscode-allautocomplete/1ea2b07b/images/All-Autocomplete.gif)
