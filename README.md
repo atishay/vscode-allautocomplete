@@ -39,4 +39,7 @@ Click on open tabs to enable them in the document. Alternatively, you can use th
 * When `AllAutocomplete.showCurrentDocument` = `false`, the index updates itself on each change to focussed editor.
 * When `AllAutocomplete.updateOnlyOnSave` = `true`, the index is updated only on save and open/close of documents.
 
+## TODO
+* Support language based word completion.
+
 **Enjoy!**

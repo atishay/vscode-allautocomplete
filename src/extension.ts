@@ -35,8 +35,8 @@ function loadConfiguration() {
     const config = vscode.workspace.getConfiguration('AllAutocomplete');
     Settings.minWordLength = config.get("minWordLength", 3);
     Settings.maxLines = config.get("maxLines", 9999);
-    Settings.whitespaceSplitter = new RegExp(config.get("whitespace", "^\\w+"), "g");
-    Settings.triggerCharacters = config.get("trigger", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    Settings.whitespaceSplitter = new RegExp(config.get("whitespace", "[^\\w]+"), "g");
+    Settings.triggerCharacters = config.get("trigger", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
     Settings.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch", false);
     Settings.showCurrentDocument = config.get("showCurrentDocument", true);
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
@@ -61,6 +61,7 @@ function relativePath(filePath: string) {
     return path.relative(workspace.rootPath, filePath);
 }
 
+let activeWord: string = "";
 let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
 
 /**
@@ -117,6 +118,7 @@ const provider = {
         let clean = [], map = {};
         // Do not show the same word in autocomplete.
         map[word] = {};
+        map[activeWord] = {};
         // Deduplicate results now.
         results.forEach((item) => {
             if (!map[item.label]) {
@@ -158,6 +160,8 @@ function parseDocument(document: TextDocument) {
  */
 function addWord(word:string, trie:any, fileName:string) {
     word = word.replace(Settings.whitespaceSplitter, '');
+    // Active word is used to hide the given word from the autocomplete.
+    activeWord = word;
     if (Settings.ignoredWords.indexOf(word) !== -1) return;
     if (word.length >= Settings.minWordLength) {
         let item = trie.find(word);
@@ -179,7 +183,8 @@ function addWord(word:string, trie:any, fileName:string) {
  * @param {string} word
  * @param {any} trie
  */
-function removeWord(word:string, trie) {
+function removeWord(word: string, trie) {
+    word = word.replace(Settings.whitespaceSplitter, '');
     if (word.length >= Settings.minWordLength) {
         let item = trie.find(word)[0];
         if (item && item[0]) {
@@ -271,7 +276,7 @@ class ActiveDocManager {
 
         // Start is the actual start wordIndex
         let start: number;
-        for (start = r.start.character; start > 0; --start) {
+        for (start = r.start.character - 1; start > 0; --start) {
             if ((line[start] || "").match(Settings.whitespaceSplitter)) {
                 start = start + 1;
                 break;

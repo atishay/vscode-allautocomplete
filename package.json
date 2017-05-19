@@ -60,12 +60,12 @@
                 },
                 "AllAutocomplete.whitespace": {
                     "type": "string",
-                    "default": "[^\\w+]",
+                    "default": "[^\\w]+",
                     "description": "All Autocomplete: Regex to use for splitting whitespace"
                 },
                 "AllAutocomplete.trigger": {
                     "type": "string",
-                    "default": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+                    "default": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_",
                     "description": "All Autocomplete: Characters used to trigger all autocomplete"
                 },
                 "AllAutocomplete.cycleOpenDocumentsOnLaunch": {

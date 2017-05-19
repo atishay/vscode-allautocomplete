@@ -1,8 +1,9 @@
 # Change Log
-All notable changes to the "All Autocomplete" extension will be documented in this file.
 
 ### 0.0.4
-*
+* Fix a bug which causes items in the middle of brackets to not show up.
+* Fix the default value of whitespace regex.
+* Fix an issue where autocomplete would show up the current word if in the middle of editing a word.
 
 ### 0.0.3
 * Added optimization for the special case of normal typing.
