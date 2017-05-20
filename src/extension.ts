@@ -84,7 +84,7 @@ class CompletionItem extends vscode.CompletionItem {
 }
 
 
-const provider = {
+const provider: vscode.CompletionItemProvider = {
     /**
      * Provides the completion items for the supplied words.
      *
@@ -93,7 +93,7 @@ const provider = {
      * @param {CancellationToken} token
      * @returns
      */
-    provideCompletionItems(document: TextDocument, position: Position, token: vscode.CancellationToken) {
+    provideCompletionItems(document: TextDocument, position: Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         let line = document.lineAt(position.line).text, i = 0;
         for (i = position.character - 1; i > 0; --i) {
             if ((line[i] || "").match(Settings.whitespaceSplitter)) {
@@ -373,17 +373,6 @@ function handleNewActiveEditor() {
 }
 
 /**
- * Mark all words when the active document changes.
- */
-function attachActiveDocListener() {
-    if (!Settings.updateOnlyOnSave) {
-        window.onDidChangeActiveTextEditor((newDoc: vscode.TextEditor) => {
-            handleNewActiveEditor();
-        });
-        handleNewActiveEditor();
-    }
-}
-/**
  * Removes the document from the list of indexed documents.
  *
  * @param {TextDocument} document
@@ -401,12 +390,24 @@ function clearDocument(document: TextDocument) {
 export function activate(context: vscode.ExtensionContext) {
     loadConfiguration();
 
+    /**
+     * Mark all words when the active document changes.
+     */
+    function attachActiveDocListener() {
+        if (!Settings.updateOnlyOnSave) {
+            context.subscriptions.push(window.onDidChangeActiveTextEditor((newDoc: vscode.TextEditor) => {
+                handleNewActiveEditor();
+            }));
+            handleNewActiveEditor();
+        }
+    }
+
     const triggerCharacters = Settings.triggerCharacters.split('');
-    vscode.languages.registerCompletionItemProvider('*', provider, ...triggerCharacters);
-    vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('*', provider, ...triggerCharacters));
+    context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
         findActiveDocsHack();
-    });
-    vscode.commands.registerCommand("AllAutocomplete.toggleCurrentFile", () => {
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.toggleCurrentFile", () => {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
         if (Settings.showCurrentDocument) {
             config.update("showCurrentDocument", false);
@@ -421,32 +422,32 @@ export function activate(context: vscode.ExtensionContext) {
                 ActiveDocManager.updateContent();
             }
         }
-    });
+    }));
 
-    workspace.onDidOpenTextDocument((document: TextDocument) => {
+    context.subscriptions.push(workspace.onDidOpenTextDocument((document: TextDocument) => {
         parseDocument(document);
-    });
+    }));
 
-    workspace.onDidCloseTextDocument((document: TextDocument) => {
+    context.subscriptions.push(workspace.onDidCloseTextDocument((document: TextDocument) => {
         if (olderActiveDocument === document) {
             olderActiveDocument = null;
         }
         clearDocument(document);
-    });
+    }));
 
-    workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
+    context.subscriptions.push(workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
         if (shouldExcludeFile(e.document.fileName)) {
             return;
         }
         if (!Settings.updateOnlyOnSave && Settings.showCurrentDocument) {
             ActiveDocManager.handleContextChange(e);
         }
-    });
+    }));
     if (Settings.updateOnlyOnSave) {
-        workspace.onDidSaveTextDocument((document: TextDocument) => {
+        context.subscriptions.push(workspace.onDidSaveTextDocument((document: TextDocument) => {
             clearDocument(document);
             parseDocument(document);
-        });
+        }));
     }
 
     for (let i = 0; i < workspace.textDocuments.length; ++i) {
