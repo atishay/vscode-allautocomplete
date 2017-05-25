@@ -19,7 +19,6 @@ This extension has the following settings:
 * `AllAutocomplete.minWordLength`: Minimum word length to keep in autocomplete list.
 * `AllAutocomplete.maxLines`: Maximum number of lines to read from a file.
 * `AllAutocomplete.whitespace`: Regex to use for splitting whitespace.
-* `AllAutocomplete.trigger`: Characters used to trigger all autocomplete.
 * `AllAutocomplete.cycleOpenDocumentsOnLaunch`: Cycles through open documents on launch to enable autocomplete to include those documents on restore.
 * `AllAutocomplete.showCurrentDocument`: Show results from the current document in the autocomplete results.
 * `AllAutocomplete.ignoredWords`: Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete.

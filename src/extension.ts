@@ -36,7 +36,6 @@ function loadConfiguration() {
     Settings.minWordLength = config.get("minWordLength", 3);
     Settings.maxLines = config.get("maxLines", 9999);
     Settings.whitespaceSplitter = new RegExp(config.get("whitespace", "[^\\w]+"), "g");
-    Settings.triggerCharacters = config.get("trigger", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
     Settings.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch", false);
     Settings.showCurrentDocument = config.get("showCurrentDocument", true);
     Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
@@ -107,7 +106,7 @@ const provider: vscode.CompletionItemProvider = {
         wordList.forEach((trie, doc) => {
             if (!Settings.showCurrentDocument) {
                 if (doc === document) {
-                    return;
+                    return ;
                 }
             }
             let words = trie.find(word);
@@ -402,8 +401,10 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }
 
-    const triggerCharacters = Settings.triggerCharacters.split('');
-    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('*', provider, ...triggerCharacters));
+    vscode.languages.getLanguages().then((languages) => {
+        languages.push('*');
+        context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, provider));
+    })
     context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
         findActiveDocsHack();
     }));

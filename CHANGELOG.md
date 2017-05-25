@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.0.5
+* Remove trigger characters to allow other autocomplete results to show up.
+
 ### 0.0.4
 * Fix a bug which causes items in the middle of brackets to not show up.
 * Fix the default value of whitespace regex.
