@@ -24,64 +24,13 @@ import * as vscode from 'vscode';
 import * as Trie from 'triejs';
 import * as path from 'path';
 import * as minimatch from 'minimatch';
+import { CompletionItem } from './CompletionItem'
+import { Settings } from './Settings';
+import { shouldExcludeFile } from './Utils';
 import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, window } from "vscode";
-
-const Settings: any = {};
-
-/**
- * Utility function to load all settings
- */
-function loadConfiguration() {
-    const config = vscode.workspace.getConfiguration('AllAutocomplete');
-    Settings.minWordLength = config.get("minWordLength", 3);
-    Settings.maxLines = config.get("maxLines", 9999);
-    Settings.whitespaceSplitter = new RegExp(config.get("whitespace", "[^\\w]+"), "g");
-    Settings.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch", false);
-    Settings.showCurrentDocument = config.get("showCurrentDocument", true);
-    Settings.ignoredWords = config.get("ignoredWords", "").split(Settings.whitespaceSplitter);
-    Settings.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
-    Settings.excludeFiles = config.get("excludeFiles", "(**/*.git)|(**/*.rendered)");
-    Settings.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
-}
-
-function shouldExcludeFile(file: string): boolean {
-    if (Settings.buildInFilesToExclude.indexOf(file) !== -1) {
-        return true;
-    }
-    return minimatch(relativePath(file), Settings.excludeFiles);
-}
-
-/**
- * Utility function to get path relative to the workspace root
- */
-function relativePath(filePath: string) {
-    if (!workspace.rootPath) { return filePath; }
-    if (filePath.indexOf(path.sep) === -1) { return filePath; }
-    return path.relative(workspace.rootPath, filePath);
-}
 
 let activeWord: string = "";
 let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
-
-/**
- * Implements the CompletionItem returned by autocomplete
- *
- * @class CompletionItem
- * @extends {vscode.CompletionItem}
- */
-class CompletionItem extends vscode.CompletionItem {
-    file: string;
-    line: number;
-    count: number;
-    constructor(word: string, file: string) {
-        super(word);
-        this.kind = vscode.CompletionItemKind.Text;
-        this.count = 1;
-        this.file = file;
-        this.detail = `${relativePath(file)}`;
-    }
-}
-
 
 const provider: vscode.CompletionItemProvider = {
     /**
@@ -387,7 +336,7 @@ function clearDocument(document: TextDocument) {
  * @param {vscode.ExtensionContext} context
  */
 export function activate(context: vscode.ExtensionContext) {
-    loadConfiguration();
+    Settings.init();
 
     /**
      * Mark all words when the active document changes.
