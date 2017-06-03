@@ -26,11 +26,9 @@ import * as path from 'path';
 import * as minimatch from 'minimatch';
 import { CompletionItem } from './CompletionItem'
 import { Settings } from './Settings';
+import { WordList } from './WordList';
 import { shouldExcludeFile } from './Utils';
 import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, window } from "vscode";
-
-let activeWord: string = "";
-let wordList: Map<TextDocument, { find: Function }> = new Map<TextDocument, { find: Function }>();
 
 const provider: vscode.CompletionItemProvider = {
     /**
@@ -52,7 +50,7 @@ const provider: vscode.CompletionItemProvider = {
         let word = document.getText(new Range(pos, position));
         word = word.replace(Settings.whitespaceSplitter, '');
         let results = [];
-        wordList.forEach((trie, doc) => {
+        WordList.forEach((trie, doc) => {
             if (!Settings.showCurrentDocument) {
                 if (doc === document) {
                     return ;
@@ -66,7 +64,7 @@ const provider: vscode.CompletionItemProvider = {
         let clean = [], map = {};
         // Do not show the same word in autocomplete.
         map[word] = {};
-        map[activeWord] = {};
+        map[WordList.activeWord] = {};
         // Deduplicate results now.
         results.forEach((item) => {
             if (!map[item.label]) {
@@ -93,58 +91,10 @@ function parseDocument(document: TextDocument) {
         const text = line.text;
         const words = text.split(Settings.whitespaceSplitter);
         words.forEach((word) => {
-            addWord(word, trie, document.fileName);
+            WordList.addWord(word, trie, document.fileName);
         });
     }
-    wordList.set(document, trie);
-}
-
-/**
- * Add word to the autocomplete list
- *
- * @param {string} word
- * @param {any} trie
- * @param {string} fileName
- */
-function addWord(word:string, trie:any, fileName:string) {
-    word = word.replace(Settings.whitespaceSplitter, '');
-    // Active word is used to hide the given word from the autocomplete.
-    activeWord = word;
-    if (Settings.ignoredWords.indexOf(word) !== -1) return;
-    if (word.length >= Settings.minWordLength) {
-        let item = trie.find(word);
-        if (item && item[0]) {
-            item = item[0];
-        }
-        if (item && item.label === word) {
-            item.count++;
-        } else {
-            item = new CompletionItem(word, fileName);
-            trie.add(word, item);
-        }
-    }
-}
-
-/**
- * Remove word from the search index.
- *
- * @param {string} word
- * @param {any} trie
- */
-function removeWord(word: string, trie) {
-    word = word.replace(Settings.whitespaceSplitter, '');
-    if (word.length >= Settings.minWordLength) {
-        let item = trie.find(word)[0];
-        if (item && item[0]) {
-            item = item[0];
-        }
-        if (item && item.label === word) {
-            item.count--;
-            if (item.count <= 0) {
-                trie.remove(word);
-            }
-        }
-    }
+    WordList.set(document, trie);
 }
 
 /**
@@ -263,7 +213,7 @@ class ActiveDocManager {
             }
             updated = true;
         }
-
+        console.log(oldText, "\t\t\t\t\t\t" ,nwText);
         return {
             old: oldText.split(Settings.whitespaceSplitter),
             new: nwText.split(Settings.whitespaceSplitter),
@@ -280,7 +230,7 @@ class ActiveDocManager {
      * @memberof ActiveDocManager
      */
     static handleContextChange(e: TextDocumentChangeEvent) {
-        const activeIndex = wordList.get(e.document);
+        const activeIndex = WordList.get(e.document);
         if (!activeIndex) {
             console.log("No index found");
             return;
@@ -294,10 +244,10 @@ class ActiveDocManager {
         e.contentChanges.forEach((change) => {
             let diff = ActiveDocManager.replace(change.range, change.text, e.contentChanges.length);
             diff.old.forEach((string) => {
-                removeWord(string, activeIndex);
+                WordList.removeWord(string, activeIndex);
             });
             diff.new.forEach((string) => {
-                addWord(string, activeIndex, e.document.fileName);
+                WordList.addWord(string, activeIndex, e.document.fileName);
             });
             updated = updated && diff.updated;
         });
@@ -326,7 +276,7 @@ function handleNewActiveEditor() {
  * @param {TextDocument} document
  */
 function clearDocument(document: TextDocument) {
-    wordList.delete(document);
+    WordList.delete(document);
 }
 
 /**
@@ -419,6 +369,6 @@ export function activate(context: vscode.ExtensionContext) {
  * @export
  */
 export function deactivate() {
-    wordList.clear();
+    WordList.clear();
     content = [];
 }
