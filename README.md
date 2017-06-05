@@ -39,5 +39,7 @@ Click on open tabs to enable them in the document. Alternatively, you can use th
 
 ## TODO
 * Support language based word completion.
+* Support open file names in word completion.
+* Support completion of the license header.
 
 **Enjoy!**

@@ -213,7 +213,6 @@ class ActiveDocManager {
             }
             updated = true;
         }
-        console.log(oldText, "\t\t\t\t\t\t" ,nwText);
         return {
             old: oldText.split(Settings.whitespaceSplitter),
             new: nwText.split(Settings.whitespaceSplitter),

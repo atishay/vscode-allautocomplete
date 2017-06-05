@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.0.6
+* Fix a bug where incomplete word results show up in parallel to the complete word results.
+
 ### 0.0.5
 * Remove trigger characters to allow other autocomplete results to show up.
 

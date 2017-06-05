@@ -48,11 +48,15 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
         this.activeWord = word;
         if (Settings.ignoredWords.indexOf(word) !== -1) return;
         if (word.length >= Settings.minWordLength) {
-            let item = trie.find(word);
-            if (item && item[0]) {
-                item = item[0];
-            }
-            if (item && item.label === word) {
+            let items = trie.find(word);
+            let item: CompletionItem;
+            items && items.some(elem => {
+                if (elem.label === word) {
+                    item = elem;
+                    return true;
+                }
+            });
+            if (item) {
                 item.count++;
             } else {
                 item = new CompletionItem(word, fileName);
@@ -69,10 +73,14 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
     removeWord(word: string, trie) {
         word = word.replace(Settings.whitespaceSplitter, '');
         if (word.length >= Settings.minWordLength) {
-            let item = trie.find(word)[0];
-            if (item && item[0]) {
-                item = item[0];
-            }
+            let items = trie.find(word)[0];
+            let item: CompletionItem;
+            items && items.some(elem => {
+                if (elem.label === word) {
+                    item = elem;
+                    return true;
+                }
+            });
             if (item && item.label === word) {
                 item.count--;
                 if (item.count <= 0) {
