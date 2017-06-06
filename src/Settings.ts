@@ -48,14 +48,6 @@ class SettingsClass {
         this.excludeFiles = config.get("excludeFiles", "(**/*.git)|(**/*.rendered)");
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
     }
-    static _instance: SettingsClass;
-    static get instance(): SettingsClass {
-        if (!SettingsClass._instance) {
-            SettingsClass._instance = new SettingsClass();
-        }
-        return SettingsClass._instance;
-    }
 }
 
-let Settings = SettingsClass.instance;
-export { Settings };
+export const Settings = new SettingsClass();

@@ -25,6 +25,13 @@ import { Settings } from './Settings';
 import * as path from 'path';
 import * as minimatch from 'minimatch';
 
+/**
+ * Checks if the file is marked for exclusion by the user settings
+ *
+ * @export
+ * @param {string} file
+ * @returns {boolean}
+ */
 export function shouldExcludeFile(file: string): boolean {
     if (Settings.buildInFilesToExclude.indexOf(file) !== -1) {
         return true;
@@ -32,8 +39,48 @@ export function shouldExcludeFile(file: string): boolean {
     return minimatch(this.relativePath(file), Settings.excludeFiles);
 }
 
+/**
+ * Converts document path to relative path
+ *
+ * @export
+ * @param {string} filePath
+ * @returns
+ */
 export function relativePath(filePath: string) {
     if (!vscode.workspace.rootPath) { return filePath; }
     if (filePath.indexOf(path.sep) === -1) { return filePath; }
     return path.relative(vscode.workspace.rootPath, filePath);
+}
+
+/**
+ * Finds active documents by cycling them.
+ *
+ * @returns
+ */
+export function findActiveDocsHack() {
+    // Based on https://github.com/eamodio/vscode-restore-editors/blob/master/src/documentManager.ts#L57
+    return new Promise((resolve, reject) => {
+        let active = vscode.window.activeTextEditor as any;
+        let editor = active;
+        const openEditors: any[] = [];
+        function handleNextEditor() {
+            if (editor !== undefined) {
+                // If we didn't start with a valid editor, set one once we find it
+                if (active === undefined) {
+                    active = editor;
+                }
+
+                openEditors.push(editor);
+            }
+            // window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
+            setTimeout(() => {
+                editor = vscode.window.activeTextEditor;
+                if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve();
+                if ((active === undefined && editor === undefined) || editor._id !== active._id) return handleNextEditor();
+                resolve();
+            }, 500);
+            vscode.commands.executeCommand('workbench.action.nextEditor')
+        }
+        handleNextEditor();
+    });
 }

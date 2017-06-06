@@ -24,111 +24,13 @@ import * as vscode from 'vscode';
 import * as Trie from 'triejs';
 import * as path from 'path';
 import * as minimatch from 'minimatch';
+import { CompletionItemProvider } from './CompletionItemProvider';
 import { CompletionItem } from './CompletionItem'
 import { Settings } from './Settings';
 import { WordList } from './WordList';
-import { shouldExcludeFile } from './Utils';
+import { shouldExcludeFile, findActiveDocsHack } from './Utils';
+import { DocumentManager } from './DocumentManager';
 import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, window } from "vscode";
-
-const provider: vscode.CompletionItemProvider = {
-    /**
-     * Provides the completion items for the supplied words.
-     *
-     * @param {TextDocument} document
-     * @param {Position} position
-     * @param {CancellationToken} token
-     * @returns
-     */
-    provideCompletionItems(document: TextDocument, position: Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-        let line = document.lineAt(position.line).text, i = 0;
-        for (i = position.character - 1; i > 0; --i) {
-            if ((line[i] || "").match(Settings.whitespaceSplitter)) {
-                break;
-            }
-        }
-        var pos = new Position(position.line, i);
-        let word = document.getText(new Range(pos, position));
-        word = word.replace(Settings.whitespaceSplitter, '');
-        let results = [];
-        WordList.forEach((trie, doc) => {
-            if (!Settings.showCurrentDocument) {
-                if (doc === document) {
-                    return ;
-                }
-            }
-            let words = trie.find(word);
-            if (words) {
-                results = results.concat(words);
-            }
-        });
-        let clean = [], map = {};
-        // Do not show the same word in autocomplete.
-        map[word] = {};
-        map[WordList.activeWord] = {};
-        // Deduplicate results now.
-        results.forEach((item) => {
-            if (!map[item.label]) {
-                clean.push(item);
-                map[item.label] = item;
-            }
-        });
-        return clean;
-    }
-}
-
-/**
- * Parses a document to create a trie for the document.
- *
- * @param {TextDocument} document
- */
-function parseDocument(document: TextDocument) {
-    if (shouldExcludeFile(document.fileName)) {
-        return;
-    }
-    const trie = new Trie({ enableCache: false });
-    for (let i = 0; i < Math.min(Settings.maxLines, document.lineCount); ++i) {
-        const line = document.lineAt(i);
-        const text = line.text;
-        const words = text.split(Settings.whitespaceSplitter);
-        words.forEach((word) => {
-            WordList.addWord(word, trie, document.fileName);
-        });
-    }
-    WordList.set(document, trie);
-}
-
-/**
- * Finds active documents by cycling them.
- *
- * @returns
- */
-function findActiveDocsHack() {
-    // Based on https://github.com/eamodio/vscode-restore-editors/blob/master/src/documentManager.ts#L57
-    return new Promise((resolve, reject) => {
-        let active = window.activeTextEditor as any;
-        let editor = active;
-        const openEditors: any[] = [];
-        function handleNextEditor() {
-            if (editor !== undefined) {
-                // If we didn't start with a valid editor, set one once we find it
-                if (active === undefined) {
-                    active = editor;
-                }
-
-                openEditors.push(editor);
-            }
-            // window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
-            setTimeout(() => {
-                editor = window.activeTextEditor;
-                if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve();
-                if ((active === undefined && editor === undefined) || editor._id !== active._id) return handleNextEditor();
-                resolve();
-            }, 500);
-            vscode.commands.executeCommand('workbench.action.nextEditor')
-        }
-        handleNextEditor();
-    });
-}
 
 let content = [];
 /**
@@ -262,20 +164,11 @@ function handleNewActiveEditor() {
         ActiveDocManager.updateContent();
     } else {
         if (olderActiveDocument) {
-            clearDocument(olderActiveDocument);
-            parseDocument(olderActiveDocument);
+            DocumentManager.clearDocument(olderActiveDocument);
+            DocumentManager.parseDocument(olderActiveDocument);
         }
         olderActiveDocument = window.activeTextEditor ? window.activeTextEditor.document: null;
     }
-}
-
-/**
- * Removes the document from the list of indexed documents.
- *
- * @param {TextDocument} document
- */
-function clearDocument(document: TextDocument) {
-    WordList.delete(document);
 }
 
 /**
@@ -301,7 +194,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.languages.getLanguages().then((languages) => {
         languages.push('*');
-        context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, provider));
+        context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, CompletionItemProvider));
     })
     context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
         findActiveDocsHack();
@@ -316,22 +209,22 @@ export function activate(context: vscode.ExtensionContext) {
             Settings.showCurrentDocument = true;
             let currentDocument = window.activeTextEditor ? window.activeTextEditor.document : null;
             if (currentDocument) {
-                clearDocument(currentDocument);
-                parseDocument(currentDocument);
+                DocumentManager.clearDocument(currentDocument);
+                DocumentManager.parseDocument(currentDocument);
                 ActiveDocManager.updateContent();
             }
         }
     }));
 
     context.subscriptions.push(workspace.onDidOpenTextDocument((document: TextDocument) => {
-        parseDocument(document);
+        DocumentManager.parseDocument(document);
     }));
 
     context.subscriptions.push(workspace.onDidCloseTextDocument((document: TextDocument) => {
         if (olderActiveDocument === document) {
             olderActiveDocument = null;
         }
-        clearDocument(document);
+        DocumentManager.clearDocument(document);
     }));
 
     context.subscriptions.push(workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
@@ -344,14 +237,14 @@ export function activate(context: vscode.ExtensionContext) {
     }));
     if (Settings.updateOnlyOnSave) {
         context.subscriptions.push(workspace.onDidSaveTextDocument((document: TextDocument) => {
-            clearDocument(document);
-            parseDocument(document);
+            DocumentManager.clearDocument(document);
+            DocumentManager.parseDocument(document);
         }));
     }
 
     for (let i = 0; i < workspace.textDocuments.length; ++i) {
         // Parse all words in this document
-        parseDocument(workspace.textDocuments[i]);
+        DocumentManager.parseDocument(workspace.textDocuments[i]);
     }
 
     // All open editors are not available: https://github.com/Microsoft/vscode/issues/15178

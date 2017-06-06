@@ -28,13 +28,6 @@ import { CompletionItem } from './CompletionItem'
 
 class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
     activeWord: string;
-    static _instance: WordListClass;
-    static get instance(): WordListClass {
-        if (!WordListClass._instance) {
-            WordListClass._instance = new WordListClass();
-        }
-        return WordListClass._instance;
-    }
     /**
      * Add word to the autocomplete list
      *
@@ -91,5 +84,4 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
     }
 }
 
-let WordList = WordListClass.instance;
-export { WordList };
+export const WordList = new WordListClass();
