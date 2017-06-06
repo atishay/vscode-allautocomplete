@@ -71,7 +71,12 @@ class CompletionItemProviderClass {
                 map[item.label] = item;
             }
         });
-        return clean;
+
+        const result = new vscode.CompletionList();
+        result.items = clean;
+        result.isIncomplete = true;
+
+        return result;
     }
 }
 

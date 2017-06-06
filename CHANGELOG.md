@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.0.7
+* Fix for a bug introduced in 0.0.5 where all words were not showing up due to autocomplete not being called for new characters typed.
+
 ### 0.0.6
 * Fix a bug where incomplete word results show up in parallel to the complete word results.
 
