@@ -45,7 +45,7 @@ class SettingsClass {
         this.showCurrentDocument = config.get("showCurrentDocument", true);
         this.ignoredWords = config.get("ignoredWords", "").split(this.whitespaceSplitter);
         this.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
-        this.excludeFiles = config.get("excludeFiles", "*.+(git|rendered)");
+        this.excludeFiles = config.get("excludeFiles", "**/*.+(git|rendered)");
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
     }
 }

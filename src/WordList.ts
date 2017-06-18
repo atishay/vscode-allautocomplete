@@ -66,7 +66,7 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
     removeWord(word: string, trie) {
         word = word.replace(Settings.whitespaceSplitter, '');
         if (word.length >= Settings.minWordLength) {
-            let items = trie.find(word)[0];
+            let items = trie.find(word);
             let item: CompletionItem;
             items && items.some(elem => {
                 if (elem.label === word) {
