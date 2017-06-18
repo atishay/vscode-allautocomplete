@@ -62,9 +62,9 @@ class CompletionItemProviderClass {
             if (!inserted) {
                 clean.push(item);
                 map[item.label] = item;
-                item.details = [item.detail];
+                item.details = [item.info];
             } else if(map[item.label] !== skip) {
-                map[item.label].details.push(item.detail);
+                map[item.label].details.push(item.info);
             }
         });
         return clean;

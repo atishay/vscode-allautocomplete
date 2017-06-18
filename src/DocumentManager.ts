@@ -21,9 +21,10 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as Trie from 'triejs';
+import * as path from 'path';
 import { Settings } from './Settings';
 import { WordList } from './WordList';
-import { shouldExcludeFile } from './Utils';
+import { shouldExcludeFile, shorten, relativePath } from './Utils';
 
 /**
  * Class to manage addition and removal of documents from the index
@@ -31,6 +32,8 @@ import { shouldExcludeFile } from './Utils';
  * @class DocumentManagerClass
  */
 class DocumentManagerClass {
+    private paths: Map<string, string> = new Map<string, string>();
+    private files: Map<string, string[]> = new Map<string, string[]>();
     /**
      * Parses a document to create a trie for the document.
      *
@@ -51,6 +54,23 @@ class DocumentManagerClass {
             });
         }
         WordList.set(document, trie);
+        let filename = relativePath(document.fileName);
+        let basename = path.basename(filename);
+        if (this.files[basename]) {
+            this.files[basename].push(filename);
+            let sames = shorten(this.files[basename]);
+            for (let i = 0; i < this.files[basename].length; ++i) {
+                this.paths[this.files[basename][i]] = sames[i] + basename;
+            }
+        } else {
+            // Easy case
+            this.files[basename] = [filename];
+            this.paths[filename] = basename;
+        }
+    }
+
+    documentDisplayPath(docPath: string) {
+        return this.paths[relativePath(docPath)];
     }
 
     /**
@@ -61,6 +81,22 @@ class DocumentManagerClass {
      */
     clearDocument(document: vscode.TextDocument) {
         WordList.delete(document);
+        let filename = relativePath(document.fileName);
+        let basename = path.basename(filename);
+        delete this.paths[filename];
+        if (this.files[basename].length === 1) {
+            delete this.files[basename];
+        } else {
+            this.files[basename].splice(this.files[basename].indexOf(filename), 1);
+            if (this.files[basename].length === 1) {
+                this.paths[this.files[basename][0]] = basename;
+            } else {
+                let sames = shorten(this.files[basename]);
+                for (let i = 0; i < this.files[basename].length; ++i) {
+                    this.paths[this.files[basename][i]] = sames[i] + basename;
+                }
+            }
+        }
     }
 
 }

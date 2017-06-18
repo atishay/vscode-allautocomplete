@@ -20,7 +20,7 @@
  */
 'use strict';
 import * as vscode from 'vscode';
-import { relativePath } from './Utils';
+import { DocumentManager } from './DocumentManager';
 
 /**
  * Implements the CompletionItem returned by autocomplete
@@ -39,8 +39,8 @@ export class CompletionItem extends vscode.CompletionItem {
         this.count = 1;
         this.file = file;
     }
-    get detail() {
-        return `${relativePath(this.file)}(${this.count})`;
+    get info() {
+        return `${DocumentManager.documentDisplayPath(this.file)}(${this.count})`;
     }
     get documentation() {
         return this.details.join("\n");
