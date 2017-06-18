@@ -39,7 +39,7 @@ export class CompletionItem extends vscode.CompletionItem {
         this.count = 1;
         this.file = file;
     }
-    get info() {
+    get detail() {
         return `${DocumentManager.documentDisplayPath(this.file)} (${this.count})`;
     }
     get documentation() {
