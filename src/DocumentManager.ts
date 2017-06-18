@@ -24,7 +24,7 @@ import * as Trie from 'triejs';
 import * as path from 'path';
 import { Settings } from './Settings';
 import { WordList } from './WordList';
-import { shouldExcludeFile, shorten, relativePath } from './Utils';
+import { shouldExcludeFile, relativePath } from './Utils';
 
 /**
  * Class to manage addition and removal of documents from the index
@@ -58,9 +58,8 @@ class DocumentManagerClass {
         let basename = path.basename(filename);
         if (this.files[basename]) {
             this.files[basename].push(filename);
-            let sames = shorten(this.files[basename]);
             for (let i = 0; i < this.files[basename].length; ++i) {
-                this.paths[this.files[basename][i]] = sames[i] + basename;
+                this.paths[this.files[basename][i]] = this.files[basename][i];
             }
         } else {
             // Easy case
@@ -91,9 +90,8 @@ class DocumentManagerClass {
             if (this.files[basename].length === 1) {
                 this.paths[this.files[basename][0]] = basename;
             } else {
-                let sames = shorten(this.files[basename]);
                 for (let i = 0; i < this.files[basename].length; ++i) {
-                    this.paths[this.files[basename][i]] = sames[i] + basename;
+                    this.paths[this.files[basename][i]] = this.files[basename][i];
                 }
             }
         }
