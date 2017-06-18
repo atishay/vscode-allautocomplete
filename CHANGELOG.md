@@ -3,6 +3,7 @@
 ### 0.0.8
 * Show usage count in the details per file.
 * Using higher level APIs for better performance.
+* Fix glob pattern for exclusion.
 
 ### 0.0.7
 * Fix for a bug introduced in 0.0.5 where all words were not showing up due to autocomplete not being called for new characters typed.

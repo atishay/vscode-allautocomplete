@@ -85,7 +85,7 @@
                 },
                 "AllAutocomplete.excludeFiles": {
                     "type": "string",
-                    "default": "(**/*.git)|(**/*.rendered)",
+                    "default": "*.+(git|rendered)",
                     "description": "Glob pattern for files to exclude from autocomplete search."
                 }
             }
