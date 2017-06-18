@@ -38,15 +38,7 @@ class CompletionItemProviderClass {
      * @returns
      */
     provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-        const line = document.lineAt(position.line).text;
-        let i = 0;
-        for (i = position.character - 1; i > 0; --i) {
-            if ((line[i] || "").match(Settings.whitespaceSplitter)) {
-                break;
-            }
-        }
-        const pos = new vscode.Position(position.line, i);
-        let word = document.getText(new vscode.Range(pos, position));
+        let word = document.getText(document.getWordRangeAtPosition(position));
         word = word.replace(Settings.whitespaceSplitter, '');
         let results = [];
         WordList.forEach((trie, doc) => {
@@ -60,23 +52,22 @@ class CompletionItemProviderClass {
                 results = results.concat(words);
             }
         });
-        const clean = [], map = {};
+        const clean = [], map = {}, skip="skip";
         // Do not show the same word in autocomplete.
-        map[word] = {};
-        map[WordList.activeWord] = {};
+        map[word] = skip;
+        map[WordList.activeWord] = skip;
         // Deduplicate results now.
         results.forEach((item) => {
-            if (!map[item.label]) {
+            let inserted = map[item.label];
+            if (!inserted) {
                 clean.push(item);
                 map[item.label] = item;
+                item.details = [item.detail];
+            } else if(map[item.label] !== skip) {
+                map[item.label].details.push(item.detail);
             }
         });
-
-        const result = new vscode.CompletionList();
-        result.items = clean;
-        result.isIncomplete = true;
-
-        return result;
+        return clean;
     }
 }
 

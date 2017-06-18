@@ -32,11 +32,17 @@ export class CompletionItem extends vscode.CompletionItem {
     file: string;
     line: number;
     count: number;
+    details: String[];
     constructor(word: string, file: string) {
         super(word);
         this.kind = vscode.CompletionItemKind.Text;
         this.count = 1;
         this.file = file;
-        this.detail = `${relativePath(file)}`;
+    }
+    get detail() {
+        return `${relativePath(this.file)}(${this.count})`;
+    }
+    get documentation() {
+        return this.details.join("\n");
     }
 }
