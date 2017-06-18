@@ -2,7 +2,7 @@
     "name": "All-Autocomplete",
     "displayName": "All Autocomplete",
     "description": "Create autocomplete items from open files in VSCode.",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
