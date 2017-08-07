@@ -25,7 +25,9 @@ This extension has the following settings:
 * `AllAutocomplete.excludeFiles`: Glob pattern for files to exclude from autocomplete search.
 
 ## Known Issues
-* To enable autocomplete to work with markdown files, please enable it in settings:
+
+### Markdown support
+To enable autocomplete to work with markdown files, please enable it in settings:
 ```
 "[markdown]": {
     "editor.quickSuggestions": true
