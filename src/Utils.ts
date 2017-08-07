@@ -47,9 +47,7 @@ export function shouldExcludeFile(file: string): boolean {
  * @returns
  */
 export function relativePath(filePath: string) {
-    if (!vscode.workspace.rootPath) { return filePath; }
-    if (filePath.indexOf(path.sep) === -1) { return filePath; }
-    return path.relative(vscode.workspace.rootPath, filePath);
+    return vscode.workspace.asRelativePath(filePath);
 }
 
 /**

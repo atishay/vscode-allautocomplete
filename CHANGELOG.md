@@ -1,4 +1,8 @@
 # Change Log
+### 0.0.9
+* Remove rootPath API for multi-project workflows.
+* Allow -, _ and $ to be a part of the words.
+* Updated readme about markdown support (#6)
 
 ### 0.0.8
 * Show usage count in the details per file.

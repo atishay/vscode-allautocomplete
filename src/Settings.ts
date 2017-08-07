@@ -40,7 +40,7 @@ class SettingsClass {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
         this.minWordLength = config.get("minWordLength", 3);
         this.maxLines = config.get("maxLines", 9999);
-        this.whitespaceSplitter = new RegExp(config.get("whitespace", "[^\\w]+"), "g");
+        this.whitespaceSplitter = new RegExp(config.get("whitespace", "[^\\w-_$]+"), "g");
         this.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch", false);
         this.showCurrentDocument = config.get("showCurrentDocument", true);
         this.ignoredWords = config.get("ignoredWords", "").split(this.whitespaceSplitter);
