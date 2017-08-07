@@ -60,7 +60,7 @@
                 },
                 "AllAutocomplete.whitespace": {
                     "type": "string",
-                    "default": "[^\\w]+",
+                    "default": "[^\\w-_]+",
                     "description": "All Autocomplete: Regex to use for splitting whitespace"
                 },
                 "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
