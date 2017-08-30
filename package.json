@@ -57,15 +57,15 @@
                     "type": "object",
                     "description": "Language specific settings for the whitespace splitter",
                     "default": {
-                        "ruby": "[^\\w-_$:]+",
-                        "javascript": "[^\\w_$]+",
-                        "javascriptreact": "[^\\w_-$@]+",
-                        "typescript": "[^\\w_-$@]+",
-                        "php": "[^\\w_$]+",
-                        "css": "[^\\w-_$#]+",
-                        "scss": "[^\\w-_$#@]+",
-                        "html": "[^\\w-_$#]+",
-                        "python": "[^\\w-_]+"
+                        "ruby": "[^\\w\\-_\\$:]+",
+                        "javascript": "[^\\w_\\$]+",
+                        "javascriptreact": "[^\\w_\\-\\$\\@]+",
+                        "typescript": "[^\\w_\\-\\$\\@]+",
+                        "php": "[^\\w_\\$]+",
+                        "css": "[^\\w\\-_\\$#]+",
+                        "scss": "[^\\w\\-_\\$#\\@]+",
+                        "html": "[^\\w\\-_\\$#]+",
+                        "python": "[^\\w\\-_]+"
                     }
                 },
                 "AllAutocomplete.minWordLength": {
@@ -80,7 +80,7 @@
                 },
                 "AllAutocomplete.whitespace": {
                     "type": "string",
-                    "default": "[^\\w-_$]+",
+                    "default": "[^\\w\\-_\\$]+",
                     "description": "All Autocomplete: Regex to use for splitting whitespace"
                 },
                 "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
