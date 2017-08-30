@@ -39,14 +39,14 @@ class SettingsClass {
     languageWhitespace: Map<String, RegExp>;
     init() {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
-        this.minWordLength = config.get("minWordLength");
-        this.maxLines = config.get("maxLines");
-        this.defaultWhitespaceSplitter = new RegExp(config.get("whitespace"), "g");
-        this.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch");
-        this.showCurrentDocument = config.get("showCurrentDocument");
+        this.minWordLength = Number(config.get("minWordLength"));
+        this.maxLines = Number(config.get("maxLines"));
+        this.defaultWhitespaceSplitter = new RegExp(config.get("whitespace").toString(), "g");
+        this.cycleOpenDocumentsOnLaunch = !!config.get("cycleOpenDocumentsOnLaunch");
+        this.showCurrentDocument = !!config.get("showCurrentDocument");
         this.ignoredWords = config.get("ignoredWords", "").split(this.defaultWhitespaceSplitter);
-        this.updateOnlyOnSave = config.get("updateOnlyOnSave");
-        this.excludeFiles = config.get("excludeFiles");
+        this.updateOnlyOnSave = !!config.get("updateOnlyOnSave");
+        this.excludeFiles = config.get("excludeFiles").toString();
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
         let languageWhitespace = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
