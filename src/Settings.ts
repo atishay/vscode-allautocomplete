@@ -45,7 +45,7 @@ class SettingsClass {
         this.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch");
         this.showCurrentDocument = config.get("showCurrentDocument");
         this.ignoredWords = config.get("ignoredWords", "").split(this.defaultWhitespaceSplitter);
-        this.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
+        this.updateOnlyOnSave = config.get("updateOnlyOnSave");
         this.excludeFiles = config.get("excludeFiles");
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
         let languageWhitespace = config.get("languageWhitespace");

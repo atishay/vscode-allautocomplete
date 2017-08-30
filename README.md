@@ -25,6 +25,9 @@ This extension has the following settings:
 * `AllAutocomplete.excludeFiles`: Glob pattern for files to exclude from autocomplete search.
 * `AllAutocomplete.languageWhitespace`: Regex for splitting whitespace (Language specific). Specify as a map with a language ID and regex.
 
+## Needs Suggestions
+If you feel that the whitespace splitter is wrong in some language, please report a github issue or better a pull request with the correct regex in package.json.
+
 ## Known Issues
 
 ### Markdown support
