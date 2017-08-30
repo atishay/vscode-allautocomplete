@@ -39,7 +39,7 @@ class CompletionItemProviderClass {
      */
     provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         let word = document.getText(document.getWordRangeAtPosition(position));
-        word = word.replace(Settings.whitespaceSplitter, '');
+        word = word.replace(Settings.whitespaceSplitter(document.languageId), '');
         let results = [];
         WordList.forEach((trie, doc) => {
             if (!Settings.showCurrentDocument) {

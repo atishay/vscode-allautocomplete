@@ -23,6 +23,7 @@ This extension has the following settings:
 * `AllAutocomplete.ignoredWords`: Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete.
 * `AllAutocomplete.updateOnlyOnSave`: Do not update the autocomplete list unless the document is saved.
 * `AllAutocomplete.excludeFiles`: Glob pattern for files to exclude from autocomplete search.
+* `AllAutocomplete.languageWhitespace`: Regex for splitting whitespace (Language specific). Specify as a map with a language ID and regex.
 
 ## Known Issues
 
@@ -46,7 +47,6 @@ Click on open tabs to enable them in the document. Alternatively, you can use th
 * When `AllAutocomplete.updateOnlyOnSave` = `true`, the index is updated only on save and open/close of documents.
 
 ## TODO
-* Support language based word completion.
 * Support open file names in word completion.
 * Support completion of the license header.
 

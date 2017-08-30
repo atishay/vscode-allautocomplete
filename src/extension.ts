@@ -77,7 +77,7 @@ class ActiveDocManager {
         // Start is the actual start wordIndex
         let start: number;
         for (start = r.start.character - 1; start > 0; --start) {
-            if ((line[start] || "").match(Settings.whitespaceSplitter)) {
+            if ((line[start] || "").match(Settings.whitespaceSplitter(window.activeTextEditor.document.languageId))) {
                 start = start + 1;
                 break;
             }
@@ -116,8 +116,8 @@ class ActiveDocManager {
             updated = true;
         }
         return {
-            old: oldText.split(Settings.whitespaceSplitter),
-            new: nwText.split(Settings.whitespaceSplitter),
+            old: oldText.split(Settings.whitespaceSplitter(window.activeTextEditor.document.languageId)),
+            new: nwText.split(Settings.whitespaceSplitter(window.activeTextEditor.document.languageId)),
             updated: updated
         };
     }
@@ -145,10 +145,10 @@ class ActiveDocManager {
         e.contentChanges.forEach((change) => {
             let diff = ActiveDocManager.replace(change.range, change.text, e.contentChanges.length);
             diff.old.forEach((string) => {
-                WordList.removeWord(string, activeIndex);
+                WordList.removeWord(string, activeIndex, e.document);
             });
             diff.new.forEach((string) => {
-                WordList.addWord(string, activeIndex, e.document.fileName);
+                WordList.addWord(string, activeIndex, e.document);
             });
             updated = updated && diff.updated;
         });

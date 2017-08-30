@@ -33,20 +33,33 @@ class SettingsClass {
     ignoredWords: string[];
     showCurrentDocument: boolean;
     cycleOpenDocumentsOnLaunch: boolean;
-    whitespaceSplitter: RegExp;
+    defaultWhitespaceSplitter: RegExp;
     maxLines: number;
     minWordLength: number;
+    languageWhitespace: Map<String, RegExp>;
     init() {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
-        this.minWordLength = config.get("minWordLength", 3);
-        this.maxLines = config.get("maxLines", 9999);
-        this.whitespaceSplitter = new RegExp(config.get("whitespace", "[^\\w-_$]+"), "g");
-        this.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch", false);
-        this.showCurrentDocument = config.get("showCurrentDocument", true);
-        this.ignoredWords = config.get("ignoredWords", "").split(this.whitespaceSplitter);
+        this.minWordLength = config.get("minWordLength");
+        this.maxLines = config.get("maxLines");
+        this.defaultWhitespaceSplitter = new RegExp(config.get("whitespace"), "g");
+        this.cycleOpenDocumentsOnLaunch = config.get("cycleOpenDocumentsOnLaunch");
+        this.showCurrentDocument = config.get("showCurrentDocument");
+        this.ignoredWords = config.get("ignoredWords", "").split(this.defaultWhitespaceSplitter);
         this.updateOnlyOnSave = config.get("updateOnlyOnSave", false);
-        this.excludeFiles = config.get("excludeFiles", "**/*.+(git|rendered)");
+        this.excludeFiles = config.get("excludeFiles");
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
+        let languageWhitespace = config.get("languageWhitespace");
+        this.languageWhitespace = new Map<string, RegExp>();
+        for (let key in languageWhitespace) {
+            this.languageWhitespace[key] = new RegExp(languageWhitespace[key], "g");
+        }
+    }
+    whitespaceSplitter(languageId: string) : RegExp {
+        let whitespaceSplitter = this.defaultWhitespaceSplitter;
+        if (Settings.languageWhitespace[languageId]) {
+            whitespaceSplitter = this.languageWhitespace[languageId];
+        }
+        return whitespaceSplitter;
     }
 }
 

@@ -48,9 +48,9 @@ class DocumentManagerClass {
         for (let i = 0; i < Math.min(Settings.maxLines, document.lineCount); ++i) {
             const line = document.lineAt(i);
             const text = line.text;
-            const words = text.split(Settings.whitespaceSplitter);
+            const words = text.split(Settings.whitespaceSplitter(document.languageId));
             words.forEach((word) => {
-                WordList.addWord(word, trie, document.fileName);
+                WordList.addWord(word, trie, document);
             });
         }
         WordList.set(document, trie);

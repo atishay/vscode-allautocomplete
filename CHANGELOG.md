@@ -1,4 +1,7 @@
 # Change Log
+### 0.0.10
+* Add support for language specific auto completions. You can now specify word splitters based on the language.
+
 ### 0.0.9
 * Remove rootPath API for multi-project workflows.
 * Allow -, _ and $ to be a part of the words.

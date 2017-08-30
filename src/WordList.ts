@@ -33,10 +33,10 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
      *
      * @param {string} word
      * @param {any} trie
-     * @param {string} fileName
+     * @param {vscode.TextDocument} document
      */
-    addWord(word: string, trie: any, fileName: string) {
-        word = word.replace(Settings.whitespaceSplitter, '');
+    addWord(word: string, trie: any, document: vscode.TextDocument) {
+        word = word.replace(Settings.whitespaceSplitter(document.languageId), '');
         // Active word is used to hide the given word from the autocomplete.
         this.activeWord = word;
         if (Settings.ignoredWords.indexOf(word) !== -1) return;
@@ -52,7 +52,7 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
             if (item) {
                 item.count++;
             } else {
-                item = new CompletionItem(word, fileName);
+                item = new CompletionItem(word, document.fileName);
                 trie.add(word, item);
             }
         }
@@ -63,8 +63,8 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
      * @param {string} word
      * @param {any} trie
      */
-    removeWord(word: string, trie) {
-        word = word.replace(Settings.whitespaceSplitter, '');
+    removeWord(word: string, trie, document: vscode.TextDocument) {
+        word = word.replace(Settings.whitespaceSplitter(document.languageId), '');
         if (word.length >= Settings.minWordLength) {
             let items = trie.find(word);
             let item: CompletionItem;

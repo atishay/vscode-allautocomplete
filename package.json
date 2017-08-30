@@ -45,9 +45,23 @@
                 "category": "All Autocomplete"
             }
         ],
+        "configurationDefaults": {
+            "[markdown]": {
+                "editor.quickSuggestions": true
+            }
+        },
         "configuration": {
             "title": "All Autocomplete",
             "properties": {
+                "AllAutocomplete.languageWhitespace": {
+                    "type": "object",
+                    "description": "Language specific settings for the whitespace splitter",
+                    "default": {
+                        "ruby": "[^\\w-_$:]+",
+                        "javascript": "[^\\w_]+",
+                        "javascriptreact": "[^\\w_-]+"
+                    }
+                },
                 "AllAutocomplete.minWordLength": {
                     "type": "number",
                     "default": 3,
