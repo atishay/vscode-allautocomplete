@@ -47,7 +47,7 @@ class SettingsClass {
         this.ignoredWords = config.get("ignoredWords", "").split(this.defaultWhitespaceSplitter);
         this.updateOnlyOnSave = !!config.get("updateOnlyOnSave");
         this.excludeFiles = config.get("excludeFiles").toString();
-        this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions"];
+        this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page"];
         let languageWhitespace = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {

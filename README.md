@@ -30,14 +30,6 @@ If you feel that the whitespace splitter is wrong in some language, please repor
 
 ## Known Issues
 
-### Markdown support
-To enable autocomplete to work with markdown files, please enable it in settings:
-```
-"[markdown]": {
-    "editor.quickSuggestions": true
-}
-```
-
 ### Documents do not show up in autocomplete on restore.
 
 Upon restoring Visual Studio, the documents that have never been opened do not appear in autocomplete. ([VSCode Issue#15178](https://github.com/Microsoft/vscode/issues/15178))
