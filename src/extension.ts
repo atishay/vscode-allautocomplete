@@ -136,6 +136,8 @@ class ActiveDocManager {
             console.log("No index found");
             return;
         }
+        console.log(window.activeTextEditor.document.fileName)
+        console.log(e.document.fileName)
         if (e.document !== window.activeTextEditor.document) {
             console.log("Unexpected Active Doc. Parsing broken");
             return;
@@ -231,7 +233,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (shouldExcludeFile(e.document.fileName)) {
             return;
         }
-        if (!Settings.updateOnlyOnSave && Settings.showCurrentDocument) {
+        if (!Settings.updateOnlyOnSave && Settings.showCurrentDocument && e.contentChanges.length > 0) {
             ActiveDocManager.handleContextChange(e);
         }
     }));
