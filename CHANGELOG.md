@@ -1,4 +1,7 @@
 # Change Log
+### Future Version
+* Bug fixes
+
 ### 0.0.11
 * Add support for language specific special characters like "." which are needed in CSS autocompletions.
 * Bug fixes

@@ -36,6 +36,9 @@ export function shouldExcludeFile(file: string): boolean {
     if (Settings.buildInFilesToExclude.indexOf(file) !== -1) {
         return true;
     }
+    if (Settings.buildInRegexToExclude.find((regex) => Array.isArray(file.match(regex))) !== undefined) {
+        return true;
+    }
     return minimatch(this.relativePath(file), Settings.excludeFiles);
 }
 

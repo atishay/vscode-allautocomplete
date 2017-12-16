@@ -28,6 +28,7 @@ import * as vscode from 'vscode';
  */
 class SettingsClass {
     buildInFilesToExclude: string[];
+    buildInRegexToExclude: RegExp[];
     excludeFiles: string;
     updateOnlyOnSave: boolean;
     ignoredWords: string[];
@@ -49,6 +50,7 @@ class SettingsClass {
         this.updateOnlyOnSave = !!config.get("updateOnlyOnSave");
         this.excludeFiles = config.get("excludeFiles").toString();
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page"];
+        this.buildInRegexToExclude = [/^extension\-output\-#[0-9]+$/];
         let languageWhitespace = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {
