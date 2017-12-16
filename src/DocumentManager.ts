@@ -83,6 +83,9 @@ class DocumentManagerClass {
         let filename = relativePath(document.fileName);
         let basename = path.basename(filename);
         delete this.paths[filename];
+        if (!this.files[basename]) {
+            return;
+        }
         if (this.files[basename].length === 1) {
             delete this.files[basename];
         } else {
