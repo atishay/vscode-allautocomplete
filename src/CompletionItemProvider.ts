@@ -22,6 +22,7 @@
 import * as vscode from 'vscode';
 import { Settings } from './Settings';
 import { WordList } from './WordList';
+import { CompletionItem } from './CompletionItem';
 
 /**
  * Class that provides completion items for this extension.
@@ -39,7 +40,9 @@ class CompletionItemProviderClass {
      */
     provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         let word = document.getText(document.getWordRangeAtPosition(position));
-        word = word.replace(Settings.whitespaceSplitter(document.languageId), '');
+        let specialCharacters = word.match(Settings.specialCharacters(document.languageId))
+        const whitespaceSplitter = Settings.whitespaceSplitter(document.languageId);
+        word = word.replace(whitespaceSplitter, '');
         let results = [];
         WordList.forEach((trie, doc) => {
             if (!Settings.showCurrentDocument) {
@@ -52,7 +55,8 @@ class CompletionItemProviderClass {
                 results = results.concat(words);
             }
         });
-        const clean = [], map = {}, skip="skip";
+        let clean = [];
+        const map = {}, skip="skip";
         // Do not show the same word in autocomplete.
         map[word] = skip;
         map[WordList.activeWord] = skip;
@@ -67,7 +71,11 @@ class CompletionItemProviderClass {
                 map[item.label].details.push(item.detail);
             }
         });
-        return clean;
+        if (Array.isArray(specialCharacters) && specialCharacters.length > 0) {
+            clean = clean.map((item) => CompletionItem.copy(item))
+            clean.forEach((item) => item.label = specialCharacters[0] + item.label)
+        }
+    return clean;
     }
 }
 

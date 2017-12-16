@@ -37,6 +37,7 @@ class SettingsClass {
     maxLines: number;
     minWordLength: number;
     languageWhitespace: Map<String, RegExp>;
+    languageSpecialCharacters: Map<String, RegExp>;
     init() {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
         this.minWordLength = Number(config.get("minWordLength"));
@@ -53,13 +54,25 @@ class SettingsClass {
         for (let key in languageWhitespace) {
             this.languageWhitespace[key] = new RegExp(languageWhitespace[key], "g");
         }
+        let languageSpecialCharacters = config.get("languageSpecialCharacters");
+        this.languageSpecialCharacters = new Map<string, RegExp>();
+        for (let key in languageSpecialCharacters) {
+            this.languageSpecialCharacters[key] = new RegExp(languageSpecialCharacters[key], "g");
+        }
     }
     whitespaceSplitter(languageId: string) : RegExp {
         let whitespaceSplitter = this.defaultWhitespaceSplitter;
-        if (Settings.languageWhitespace[languageId]) {
+        if (this.languageWhitespace[languageId]) {
             whitespaceSplitter = this.languageWhitespace[languageId];
         }
         return whitespaceSplitter;
+    }
+    specialCharacters(languageId: string): RegExp {
+        let specialCharacter = new RegExp("");
+        if (this.languageSpecialCharacters[languageId]) {
+            specialCharacter = this.languageSpecialCharacters[languageId];
+        }
+        return specialCharacter;
     }
 }
 

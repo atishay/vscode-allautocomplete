@@ -62,10 +62,18 @@
                         "javascriptreact": "[^\\w_\\-\\$\\@]+",
                         "typescript": "[^\\w_\\-\\$\\@]+",
                         "php": "[^\\w_\\$]+",
-                        "css": "[^\\w\\-_\\$#]+",
-                        "scss": "[^\\w\\-_\\$#\\@]+",
-                        "html": "[^\\w\\-_\\$#]+",
+                        "css": "[^\\w\\-_\\$]+",
+                        "scss": "[^\\w\\-_\\$\\@]+",
+                        "html": "[^\\w\\-_\\$]+",
                         "python": "[^\\w\\-_]+"
+                    }
+                },
+                "AllAutocomplete.languageSpecialCharacters": {
+                    "type": "object",
+                    "description": "Language specific special characters that can be a part of autocompletion(that can fit with all strings)",
+                    "default": {
+                        "css": "^[\\.#]",
+                        "scss": "^[\\.#]"
                     }
                 },
                 "AllAutocomplete.minWordLength": {

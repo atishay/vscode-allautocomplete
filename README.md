@@ -24,6 +24,7 @@ This extension has the following settings:
 * `AllAutocomplete.updateOnlyOnSave`: Do not update the autocomplete list unless the document is saved.
 * `AllAutocomplete.excludeFiles`: Glob pattern for files to exclude from autocomplete search.
 * `AllAutocomplete.languageWhitespace`: Regex for splitting whitespace (Language specific). Specify as a map with a language ID and regex.
+* `AllAutocomplete.languageSpecialCharacters`: Regex for finding special characters that languages treat differently in autocomplete. For example, `.` in CSS.
 
 ## Needs Suggestions
 If you feel that the whitespace splitter is wrong in some language, please report a github issue or better a pull request with the correct regex in package.json.
@@ -35,6 +36,10 @@ If you feel that the whitespace splitter is wrong in some language, please repor
 Upon restoring Visual Studio, the documents that have never been opened do not appear in autocomplete. ([VSCode Issue#15178](https://github.com/Microsoft/vscode/issues/15178))
 
 Click on open tabs to enable them in the document. Alternatively, you can use the Cmd+P menu and select `Cycle Open Editors`. You can enable this to be done on launch with `AllAutocomplete.cycleOpenDocumentsOnLaunch`.
+
+### Emmet collision
+
+The emmet plugin takes over the special character `#` in CSS and therefore that cannot be auto-completed.
 
 ## Performance Impact
 * When using real-time mode by setting `AllAutocomplete.showCurrentDocument` = `true`, the plugin tries to update the index on each addition/deletion.

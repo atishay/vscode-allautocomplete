@@ -1,4 +1,8 @@
 # Change Log
+### 0.0.11
+* Add support for language specific special characters like "." which are needed in CSS autocompletions.
+* Bug fixes
+
 ### 0.0.10
 * Add support for language specific auto completions. You can now specify word splitters based on the language.
 

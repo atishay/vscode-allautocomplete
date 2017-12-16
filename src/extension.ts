@@ -136,8 +136,6 @@ class ActiveDocManager {
             console.log("No index found");
             return;
         }
-        console.log(window.activeTextEditor.document.fileName)
-        console.log(e.document.fileName)
         if (e.document !== window.activeTextEditor.document) {
             console.log("Unexpected Active Doc. Parsing broken");
             return;
