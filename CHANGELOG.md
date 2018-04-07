@@ -1,5 +1,7 @@
 # Change Log
 ### Future Version
+* Add support Unicode variable names/words.
+* Added a hack for the broken getWordRangeAtPosition API in ELM language server.
 * Bug fixes
 
 ### 0.0.11

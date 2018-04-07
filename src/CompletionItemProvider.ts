@@ -42,6 +42,16 @@ class CompletionItemProviderClass {
         let word = document.getText(document.getWordRangeAtPosition(position));
         let specialCharacters = word.match(Settings.specialCharacters(document.languageId))
         const whitespaceSplitter = Settings.whitespaceSplitter(document.languageId);
+
+        if (document.languageId === 'elm') {
+            var oldWord = word;
+            // The language server for elm does not give the right word range.
+            // So we ignore its recommendation and use something else
+            // See https://github.com/atishay/vscode-allautocomplete/issues/16
+            let words = word.split(whitespaceSplitter);
+            word = words[words.length - 1];
+        }
+
         word = word.replace(whitespaceSplitter, '');
         let results = [];
         WordList.forEach((trie, doc) => {
@@ -55,7 +65,7 @@ class CompletionItemProviderClass {
                 results = results.concat(words);
             }
         });
-        let clean = [];
+        let clean: Array<CompletionItem> = [];
         const map = {}, skip="skip";
         // Do not show the same word in autocomplete.
         map[word] = skip;
@@ -73,7 +83,16 @@ class CompletionItemProviderClass {
         });
         if (Array.isArray(specialCharacters) && specialCharacters.length > 0) {
             clean = clean.map((item) => CompletionItem.copy(item))
-            clean.forEach((item) => item.label = specialCharacters[0] + item.label)
+            clean.forEach((item) => {
+                item.label = specialCharacters[0] + item.label;
+
+                // Hack for the broken getWordRangeAtPosition API in ELM.
+                if (document.languageId === "elm") {
+                    let k = item.label.replace(word, "");
+                    item.filterText = oldWord + k;
+                    item.insertText = item.filterText;
+                }
+            });
         }
     return clean;
     }
