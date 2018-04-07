@@ -1,6 +1,9 @@
 # Change Log
 ### Future Version
+
+### 0.0.12
 * Add support Unicode variable names/words.
+* Added support for specifying a set of wordlist files from where the words could be taken for autocomplete.
 * Added a hack for the broken getWordRangeAtPosition API in ELM language server.
 * Bug fixes
 

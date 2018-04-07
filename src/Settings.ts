@@ -19,6 +19,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 'use strict';
+import * as path from 'path';
 import * as vscode from 'vscode';
 
 /**
@@ -37,6 +38,7 @@ class SettingsClass {
     defaultWhitespaceSplitter: RegExp;
     maxLines: number;
     minWordLength: number;
+    wordListFiles: Array<string>
     languageWhitespace: Map<String, RegExp>;
     languageSpecialCharacters: Map<String, RegExp>;
     init() {
@@ -51,6 +53,12 @@ class SettingsClass {
         this.excludeFiles = config.get("excludeFiles").toString();
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page"];
         this.buildInRegexToExclude = [/^extension\-output\-#[0-9]+$/];
+        if (Array.isArray(config.get("wordListFiles"))) {
+            this.wordListFiles = config.get("wordListFiles") as Array<string>;
+        } else {
+            this.wordListFiles = [];
+        }
+        this.wordListFiles = this.wordListFiles.map((file) => path.resolve(vscode.workspace.rootPath, file));
         let languageWhitespace = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {

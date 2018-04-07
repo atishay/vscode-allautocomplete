@@ -35,6 +35,19 @@ class DocumentManagerClass {
     private paths: Map<string, string> = new Map<string, string>();
     private files: Map<string, string[]> = new Map<string, string[]>();
     /**
+     * Method to initialize the document manager.
+     *
+     * @memberof DocumentManagerClass
+     */
+    init() {
+        Settings.wordListFiles.forEach((file) => {
+            vscode.workspace.openTextDocument(file).then((document) => {
+                this.parseDocument(document);
+            });
+        })
+
+    }
+    /**
      * Parses a document to create a trie for the document.
      *
      * @param {TextDocument} document
@@ -42,6 +55,11 @@ class DocumentManagerClass {
      */
     parseDocument(document: vscode.TextDocument) {
         if (shouldExcludeFile(document.fileName)) {
+            return;
+        }
+        // Don't parse a document already present. The existing document
+        // case takes place when
+        if (WordList.has(document)) {
             return;
         }
         const trie = new Trie({ enableCache: false, maxCache: 100000 });
@@ -68,8 +86,27 @@ class DocumentManagerClass {
         }
     }
 
+    /**
+     * Utility method to find paths of active documents which takes care
+     * of relative names if there are multiple documents of the same name
+     *
+     * @param {string} docPath Absolute path
+     * @returns relative path to show
+     * @memberof DocumentManagerClass
+     */
     documentDisplayPath(docPath: string) {
         return this.paths[relativePath(docPath)];
+    }
+
+    /**
+     * Utility method to re-parse a new document.
+     *
+     * @param {vscode.TextDocument} document
+     * @memberof DocumentManagerClass
+     */
+    resetDocument(document: vscode.TextDocument) {
+        this.clearDocumentInternal(document);
+        this.parseDocument(document);
     }
 
     /**
@@ -79,6 +116,21 @@ class DocumentManagerClass {
      *@memberof DocumentManagerClass
      */
     clearDocument(document: vscode.TextDocument) {
+        if (Settings.wordListFiles.indexOf(document.fileName) !== -1) {
+            // Cannot clear this special document.
+            return;
+        }
+        this.clearDocumentInternal(document);
+    }
+
+    /**
+     * Internal function that clears a document
+     *
+     * @private
+     * @param {vscode.TextDocument} document The document to clear
+     * @memberof DocumentManagerClass
+     */
+    private clearDocumentInternal(document: vscode.TextDocument) {
         WordList.delete(document);
         let filename = relativePath(document.fileName);
         let basename = path.basename(filename);

@@ -164,8 +164,7 @@ function handleNewActiveEditor() {
         ActiveDocManager.updateContent();
     } else {
         if (olderActiveDocument) {
-            DocumentManager.clearDocument(olderActiveDocument);
-            DocumentManager.parseDocument(olderActiveDocument);
+            DocumentManager.resetDocument(olderActiveDocument);
         }
         olderActiveDocument = window.activeTextEditor ? window.activeTextEditor.document: null;
     }
@@ -179,6 +178,7 @@ function handleNewActiveEditor() {
  */
 export function activate(context: vscode.ExtensionContext) {
     Settings.init();
+    DocumentManager.init();
 
     /**
      * Mark all words when the active document changes.
@@ -209,8 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
             Settings.showCurrentDocument = true;
             let currentDocument = window.activeTextEditor ? window.activeTextEditor.document : null;
             if (currentDocument) {
-                DocumentManager.clearDocument(currentDocument);
-                DocumentManager.parseDocument(currentDocument);
+                DocumentManager.resetDocument(currentDocument);
                 ActiveDocManager.updateContent();
             }
         }
@@ -237,8 +236,7 @@ export function activate(context: vscode.ExtensionContext) {
     }));
     if (Settings.updateOnlyOnSave) {
         context.subscriptions.push(workspace.onDidSaveTextDocument((document: TextDocument) => {
-            DocumentManager.clearDocument(document);
-            DocumentManager.parseDocument(document);
+            DocumentManager.resetDocument(document);
         }));
     }
 
