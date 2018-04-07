@@ -1,152 +1,152 @@
 {
-  "name": "All-Autocomplete",
-  "displayName": "All Autocomplete",
-  "description": "Create autocomplete items from open files in VSCode.",
-  "version": "0.0.11",
-  "publisher": "Atishay-Jain",
-  "license": "MIT",
-  "engines": {
-    "vscode": "^1.14.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "keywords": [
-    "autocomplete",
-    "open files",
-    "all autocomplete"
-  ],
-  "galleryBanner": {
-    "color": "#5F889E",
-    "theme": "light"
-  },
-  "bugs": {
-    "url": "https://github.com/atishay/vscode-allautocomplete/issues"
-  },
-  "homepage": "https://github.com/atishay/vscode-allautocomplete",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atishay/vscode-allautocomplete.git"
-  },
-  "activationEvents": [
-    "*"
-  ],
-  "icon": "images/icon.png",
-  "contributes": {
-    "commands": [
-      {
-        "command": "AllAutocomplete.cycleDocuments",
-        "title": "Cycle Open Editors",
-        "category": "All Autocomplete"
-      },
-      {
-        "command": "AllAutocomplete.toggleCurrentFile",
-        "title": "Toggle Suggestions From The Current File",
-        "category": "All Autocomplete"
-      }
-    ],
-    "configurationDefaults": {
-      "[markdown]": {
-        "editor.quickSuggestions": true
-      }
+    "name": "All-Autocomplete",
+    "displayName": "All Autocomplete",
+    "description": "Create autocomplete items from open files in VSCode.",
+    "version": "0.0.12",
+    "publisher": "Atishay-Jain",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.14.0"
     },
-    "configuration": {
-      "title": "All Autocomplete",
-      "properties": {
-        "AllAutocomplete.languageWhitespace": {
-          "type": "object",
-          "description": "Language specific settings for the whitespace splitter",
-          "default": {
-            "ruby": "[^\\w\\-_\\$:\\u0080-\\uFFFF]+",
-            "javascript": "[^\\w_\\$\\u0080-\\uFFFF]+",
-            "javascriptreact": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
-            "typescript": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
-            "php": "[^\\-\\w_\\$\\u0080-\\uFFFF]+",
-            "css": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
-            "scss": "[^\\w\\-_\\$\\@\\u0080-\\uFFFF]+",
-            "html": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
-            "python": "[^\\w\\-_\\u0080-\\uFFFF]+",
-            "elm": "[^\\w\\-_\\u0080-\\uFFFF]+"
-          }
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "autocomplete",
+        "open files",
+        "all autocomplete"
+    ],
+    "galleryBanner": {
+        "color": "#5F889E",
+        "theme": "light"
+    },
+    "bugs": {
+        "url": "https://github.com/atishay/vscode-allautocomplete/issues"
+    },
+    "homepage": "https://github.com/atishay/vscode-allautocomplete",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/atishay/vscode-allautocomplete.git"
+    },
+    "activationEvents": [
+        "*"
+    ],
+    "icon": "images/icon.png",
+    "contributes": {
+        "commands": [
+            {
+                "command": "AllAutocomplete.cycleDocuments",
+                "title": "Cycle Open Editors",
+                "category": "All Autocomplete"
+            },
+            {
+                "command": "AllAutocomplete.toggleCurrentFile",
+                "title": "Toggle Suggestions From The Current File",
+                "category": "All Autocomplete"
+            }
+        ],
+        "configurationDefaults": {
+            "[markdown]": {
+                "editor.quickSuggestions": true
+            }
         },
-        "AllAutocomplete.languageSpecialCharacters": {
-          "type": "object",
-          "description": "Language specific special characters that can be a part of autocompletion(that can fit with all strings)",
-          "default": {
-            "css": "^[\\.#]",
-            "scss": "^[\\.#]"
-          }
-        },
-        "AllAutocomplete.minWordLength": {
-          "type": "number",
-          "default": 3,
-          "description": "All Autocomplete: Minimum word length to keep in autocomplete list."
-        },
-        "AllAutocomplete.maxLines": {
-          "type": "number",
-          "default": 9999,
-          "description": "All Autocomplete: Maximum number of lines to read from a file."
-        },
-        "AllAutocomplete.whitespace": {
-          "type": "string",
-          "default": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
-          "description": "All Autocomplete: Regex to use for splitting whitespace"
-        },
-        "AllAutocomplete.disableNumberHandling": {
-          "type": "boolean",
-          "default": false,
-          "description": "Disable special handling for "
-        },
-        "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
-          "type": "boolean",
-          "default": false,
-          "description": "Cycles through open documents on launch to enable autocomplete to include those documents on restore. (VSCode Issue#15178)"
-        },
-        "AllAutocomplete.showCurrentDocument": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show results from the current document in the autocomplete results(Disable to improve performance)."
-        },
-        "AllAutocomplete.ignoredWords": {
-          "type": "string",
-          "default": "",
-          "description": "Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete."
-        },
-        "AllAutocomplete.updateOnlyOnSave": {
-          "type": "boolean",
-          "default": false,
-          "description": "Do not update the autocomplete list unless the document is saved."
-        },
-        "AllAutocomplete.excludeFiles": {
-          "type": "string",
-          "default": "**/*.+(git|rendered)",
-          "description": "Glob pattern for files to exclude from autocomplete search."
-        },
-        "AllAutocomplete.wordListFiles": {
-          "type": "array",
-          "default": [],
-          "description": "List of files to initialize the word list from. These files behave as if they are always open. Expects an absolute path. Can work with relative path if the workspace contains a single folder."
+        "configuration": {
+            "title": "All Autocomplete",
+            "properties": {
+                "AllAutocomplete.languageWhitespace": {
+                    "type": "object",
+                    "description": "Language specific settings for the whitespace splitter",
+                    "default": {
+                        "ruby": "[^\\w\\-_\\$:\\u0080-\\uFFFF]+",
+                        "javascript": "[^\\w_\\$\\u0080-\\uFFFF]+",
+                        "javascriptreact": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
+                        "typescript": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
+                        "php": "[^\\-\\w_\\$\\u0080-\\uFFFF]+",
+                        "css": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
+                        "scss": "[^\\w\\-_\\$\\@\\u0080-\\uFFFF]+",
+                        "html": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
+                        "python": "[^\\w\\-_\\u0080-\\uFFFF]+",
+                        "elm": "[^\\w\\-_\\u0080-\\uFFFF]+"
+                    }
+                },
+                "AllAutocomplete.languageSpecialCharacters": {
+                    "type": "object",
+                    "description": "Language specific special characters that can be a part of autocompletion(that can fit with all strings)",
+                    "default": {
+                        "css": "^[\\.#]",
+                        "scss": "^[\\.#]"
+                    }
+                },
+                "AllAutocomplete.minWordLength": {
+                    "type": "number",
+                    "default": 3,
+                    "description": "All Autocomplete: Minimum word length to keep in autocomplete list."
+                },
+                "AllAutocomplete.maxLines": {
+                    "type": "number",
+                    "default": 9999,
+                    "description": "All Autocomplete: Maximum number of lines to read from a file."
+                },
+                "AllAutocomplete.whitespace": {
+                    "type": "string",
+                    "default": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
+                    "description": "All Autocomplete: Regex to use for splitting whitespace"
+                },
+                "AllAutocomplete.disableNumberHandling": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Disable special handling for "
+                },
+                "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Cycles through open documents on launch to enable autocomplete to include those documents on restore. (VSCode Issue#15178)"
+                },
+                "AllAutocomplete.showCurrentDocument": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show results from the current document in the autocomplete results(Disable to improve performance)."
+                },
+                "AllAutocomplete.ignoredWords": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete."
+                },
+                "AllAutocomplete.updateOnlyOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Do not update the autocomplete list unless the document is saved."
+                },
+                "AllAutocomplete.excludeFiles": {
+                    "type": "string",
+                    "default": "**/*.+(git|rendered)",
+                    "description": "Glob pattern for files to exclude from autocomplete search."
+                },
+                "AllAutocomplete.wordListFiles": {
+                    "type": "array",
+                    "default": [],
+                    "description": "List of files to initialize the word list from. These files behave as if they are always open. Expects an absolute path. Can work with relative path if the workspace contains a single folder."
+                }
+            }
         }
-      }
+    },
+    "main": "./out/src/extension",
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "dependencies": {
+        "triejs": "0.1.5",
+        "minimatch": "3.0.4"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.32",
+        "@types/node": "^6.0.40",
+        "mocha": "^2.3.3",
+        "tslint": "^5.9.1",
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0"
     }
-  },
-  "main": "./out/src/extension",
-  "scripts": {
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
-  },
-  "dependencies": {
-    "triejs": "0.1.5",
-    "minimatch": "3.0.4"
-  },
-  "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.40",
-    "mocha": "^2.3.3",
-    "tslint": "^5.9.1",
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0"
-  }
 }
