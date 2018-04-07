@@ -50,6 +50,5 @@ The emmet plugin takes over the special character `#` in CSS and therefore that 
 ## TODO
 * Support open file names in word completion.
 * Support completion of the license header.
-* Figure out why certain files are not coming up in the known list.
 
 **Enjoy!**
