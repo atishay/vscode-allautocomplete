@@ -54,12 +54,12 @@ class SettingsClass {
         let languageWhitespace = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {
-            this.languageWhitespace[key] = new RegExp(languageWhitespace[key], "g");
+            this.languageWhitespace[key] = new RegExp(languageWhitespace[key], "gu");
         }
         let languageSpecialCharacters = config.get("languageSpecialCharacters");
         this.languageSpecialCharacters = new Map<string, RegExp>();
         for (let key in languageSpecialCharacters) {
-            this.languageSpecialCharacters[key] = new RegExp(languageSpecialCharacters[key], "g");
+            this.languageSpecialCharacters[key] = new RegExp(languageSpecialCharacters[key], "gu");
         }
     }
     whitespaceSplitter(languageId: string) : RegExp {

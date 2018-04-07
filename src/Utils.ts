@@ -33,7 +33,8 @@ import * as minimatch from 'minimatch';
  * @returns {boolean}
  */
 export function shouldExcludeFile(file: string): boolean {
-    if (Settings.buildInFilesToExclude.indexOf(file) !== -1) {
+    var filename = path.basename(file);
+    if (Settings.buildInFilesToExclude.indexOf(filename) !== -1) {
         return true;
     }
     if (Settings.buildInRegexToExclude.find((regex) => Array.isArray(file.match(regex))) !== undefined) {
