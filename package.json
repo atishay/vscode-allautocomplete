@@ -57,15 +57,15 @@
                     "type": "object",
                     "description": "Language specific settings for the whitespace splitter",
                     "default": {
-                        "ruby": "[^\\w\\-_\\$:]+",
-                        "javascript": "[^\\w_\\$]+",
-                        "javascriptreact": "[^\\w_\\-\\$\\@]+",
-                        "typescript": "[^\\w_\\-\\$\\@]+",
-                        "php": "[^\\-\\w_\\$]+",
-                        "css": "[^\\w\\-_\\$]+",
-                        "scss": "[^\\w\\-_\\$\\@]+",
-                        "html": "[^\\w\\-_\\$]+",
-                        "python": "[^\\w\\-_]+"
+                        "ruby": "[^\\w\\-_\\$:\\u0080-\\uFFFF]+",
+                        "javascript": "[^\\w_\\$\\u0080-\\uFFFF]+",
+                        "javascriptreact": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
+                        "typescript": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
+                        "php": "[^\\-\\w_\\$\\u0080-\\uFFFF]+",
+                        "css": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
+                        "scss": "[^\\w\\-_\\$\\@\\u0080-\\uFFFF]+",
+                        "html": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
+                        "python": "[^\\w\\-_\\u0080-\\uFFFF]+"
                     }
                 },
                 "AllAutocomplete.languageSpecialCharacters": {
@@ -88,7 +88,7 @@
                 },
                 "AllAutocomplete.whitespace": {
                     "type": "string",
-                    "default": "[^\\w\\-_\\$]+",
+                    "default": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
                     "description": "All Autocomplete: Regex to use for splitting whitespace"
                 },
                 "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
