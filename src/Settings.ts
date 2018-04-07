@@ -54,12 +54,16 @@ class SettingsClass {
         let languageWhitespace = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {
-            this.languageWhitespace[key] = new RegExp(languageWhitespace[key], "gu");
+            try {
+                this.languageWhitespace[key] = new RegExp(languageWhitespace[key], "g");
+            } catch (e) {
+                console.log(`Invalid regex for ${key}: ${languageWhitespace[key]}`)
+            }
         }
         let languageSpecialCharacters = config.get("languageSpecialCharacters");
         this.languageSpecialCharacters = new Map<string, RegExp>();
         for (let key in languageSpecialCharacters) {
-            this.languageSpecialCharacters[key] = new RegExp(languageSpecialCharacters[key], "gu");
+            this.languageSpecialCharacters[key] = new RegExp(languageSpecialCharacters[key], "g");
         }
     }
     whitespaceSplitter(languageId: string) : RegExp {
