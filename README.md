@@ -48,7 +48,6 @@ The emmet plugin takes over the special character `#` in CSS and therefore that 
 * When `AllAutocomplete.updateOnlyOnSave` = `true`, the index is updated only on save and open/close of documents.
 
 ## TODO
-* Support open file names in word completion.
 * Support completion of the license header.
 
 **Enjoy!**

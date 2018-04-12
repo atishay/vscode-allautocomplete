@@ -14,7 +14,9 @@
     "keywords": [
         "autocomplete",
         "open files",
-        "all autocomplete"
+        "all autocomplete",
+        "intellisense",
+        "intellisense from open files"
     ],
     "galleryBanner": {
         "color": "#5F889E",

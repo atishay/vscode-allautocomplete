@@ -74,6 +74,11 @@ class DocumentManagerClass {
         WordList.set(document, trie);
         let filename = relativePath(document.fileName);
         let basename = path.basename(filename);
+        let extension = path.extname(filename);
+
+        // Add the current document name to the trie.
+        WordList.addWord(path.basename(filename, extension), trie, document);
+
         if (this.files[basename]) {
             this.files[basename].push(filename);
             for (let i = 0; i < this.files[basename].length; ++i) {

@@ -1,5 +1,6 @@
 # Change Log
 ### Future Version
+* Add support for using the filename in autocomplete.
 
 ### 0.0.12
 * Add support Unicode variable names/words.
