@@ -2,7 +2,7 @@
     "name": "All-Autocomplete",
     "displayName": "All Autocomplete",
     "description": "Create autocomplete items from open files in VSCode.",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
@@ -63,7 +63,7 @@
                         "javascript": "[^\\w_\\$\\u0080-\\uFFFF]+",
                         "javascriptreact": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
                         "typescript": "[^\\w_\\-\\$\\@\\u0080-\\uFFFF]+",
-                        "php": "[^\\-\\w_\\$\\u0080-\\uFFFF]+",
+                        "php": "[^\\w_\\$\\u0080-\\uFFFF]+",
                         "css": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
                         "scss": "[^\\w\\-_\\$\\@\\u0080-\\uFFFF]+",
                         "html": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",

@@ -43,7 +43,7 @@ class CompletionItemProviderClass {
         let specialCharacters = word.match(Settings.specialCharacters(document.languageId))
         const whitespaceSplitter = Settings.whitespaceSplitter(document.languageId);
 
-        if (document.languageId === 'elm') {
+        if (document.languageId === 'elm' || document.languageId === 'php') {
             var oldWord = word;
             // The language server for elm does not give the right word range.
             // So we ignore its recommendation and use something else
@@ -86,15 +86,15 @@ class CompletionItemProviderClass {
             clean.forEach((item) => {
                 item.label = specialCharacters[0] + item.label;
 
-                // Hack for the broken getWordRangeAtPosition API in ELM.
-                if (document.languageId === "elm") {
+                // Hack for the broken getWordRangeAtPosition API in ELM & PHP
+                if (document.languageId === "elm" || document.languageId === 'php' ) {
                     let k = item.label.replace(word, "");
                     item.filterText = oldWord + k;
                     item.insertText = item.filterText;
                 }
             });
         }
-    return clean;
+        return clean;
     }
 }
 

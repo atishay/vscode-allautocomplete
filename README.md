@@ -50,5 +50,6 @@ The emmet plugin takes over the special character `#` in CSS and therefore that 
 ## TODO
 * Support completion of the license header.
 * Investigate Ctags for autocomplete indexing from folders.
+* Fix issues with backspace and completions removing/adding wrong items.
 
 **Enjoy!**

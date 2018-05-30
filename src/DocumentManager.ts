@@ -62,7 +62,7 @@ class DocumentManagerClass {
         if (WordList.has(document)) {
             return;
         }
-        const trie = new Trie({ enableCache: false, maxCache: 100000 });
+        const trie = new Trie({ enableCache: false, maxCache: 100000, returnRoot: true });
         for (let i = 0; i < Math.min(Settings.maxLines, document.lineCount); ++i) {
             const line = document.lineAt(i);
             const text = line.text;

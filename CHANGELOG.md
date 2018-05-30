@@ -1,6 +1,11 @@
 # Change Log
 ### Future Version
+*
+
+### 0.0.13
 * Add support for using the filename in autocomplete.
+* Fix issues in PHP. (#18)
+* Add support for giving all word definitions if no word is found eg in case of '.' and other such special characters.
 
 ### 0.0.12
 * Add support Unicode variable names/words.
