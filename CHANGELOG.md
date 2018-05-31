@@ -1,4 +1,7 @@
 # Change Log
+### 000.15
+* Fix memory issues (#20) by removing `>` and `.` characters from PHP autocompletion.
+
 ### 0.0.14
 * Fix memory increase (#20)
 * Remove vulnerable dependencies
