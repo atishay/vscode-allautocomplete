@@ -94,6 +94,7 @@ class CompletionItemProviderClass {
                 }
             });
         }
+        clean.length = Math.min(clean.length, Settings.maxItemsInSingleList);
         return clean;
     }
 }

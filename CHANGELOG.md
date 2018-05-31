@@ -1,6 +1,8 @@
 # Change Log
-### Future Version
-*
+### 0.0.14
+* Fix memory increase (#20)
+* Remove vulnerable dependencies
+* Fix arrow characters in C++
 
 ### 0.0.13
 * Add support for using the filename in autocomplete.

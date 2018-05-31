@@ -2,7 +2,7 @@
     "name": "All-Autocomplete",
     "displayName": "All Autocomplete",
     "description": "Create autocomplete items from open files in VSCode.",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
@@ -16,7 +16,8 @@
         "open files",
         "all autocomplete",
         "intellisense",
-        "intellisense from open files"
+        "intellisense from open files",
+        "code completion"
     ],
     "galleryBanner": {
         "color": "#5F889E",
@@ -68,7 +69,8 @@
                         "scss": "[^\\w\\-_\\$\\@\\u0080-\\uFFFF]+",
                         "html": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
                         "python": "[^\\w\\-_\\u0080-\\uFFFF]+",
-                        "elm": "[^\\w\\-_\\u0080-\\uFFFF]+"
+                        "elm": "[^\\w\\-_\\u0080-\\uFFFF]+",
+                        "cpp": "[^\\w_\\u0080-\\uFFFF]+"
                     }
                 },
                 "AllAutocomplete.languageSpecialCharacters": {
@@ -88,6 +90,11 @@
                     "type": "number",
                     "default": 9999,
                     "description": "All Autocomplete: Maximum number of lines to read from a file."
+                },
+                "AllAutocomplete.maxItemsInSingleList": {
+                    "type": "number",
+                    "default": 999,
+                    "description": "All Autocomplete: Maximum number of items sent for autocomplete in a single API call."
                 },
                 "AllAutocomplete.whitespace": {
                     "type": "string",

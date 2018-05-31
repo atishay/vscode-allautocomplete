@@ -196,7 +196,7 @@ export function activate(context: vscode.ExtensionContext) {
         languages.push('*');
         languages = languages.filter((x) => x.toLowerCase() !== "php");
         context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, CompletionItemProvider));
-        context.subscriptions.push(vscode.languages.registerCompletionItemProvider("php", CompletionItemProvider, ...">$abcdefghijklmnopqrstuvwxyz"));
+        context.subscriptions.push(vscode.languages.registerCompletionItemProvider("php", CompletionItemProvider, ...">$abcdefghijklmnopqrstuvwxyz."));
     })
     context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
         findActiveDocsHack();
