@@ -81,6 +81,8 @@ class CompletionItemProviderClass {
                 map[item.label].details.push(item.detail);
             }
         });
+        // Prevent overflow.
+        clean.length = Math.min(clean.length, Settings.maxItemsInSingleList);
         if (Array.isArray(specialCharacters) && specialCharacters.length > 0) {
             clean = clean.map((item) => CompletionItem.copy(item))
             clean.forEach((item) => {
@@ -94,7 +96,6 @@ class CompletionItemProviderClass {
                 }
             });
         }
-        clean.length = Math.min(clean.length, Settings.maxItemsInSingleList);
         return clean;
     }
 }
