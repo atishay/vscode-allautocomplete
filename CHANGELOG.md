@@ -1,5 +1,8 @@
 # Change Log
-### 000.15
+### 0.0.16
+* Fix issues in PHP and ELM related to case sensitivity.
+
+### 0.0.15
 * Fix memory issues (#20) by removing `>` and `.` characters from PHP autocompletion.
 
 ### 0.0.14

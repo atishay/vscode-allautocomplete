@@ -89,8 +89,8 @@ class CompletionItemProviderClass {
                 item.label = specialCharacters[0] + item.label;
 
                 // Hack for the broken getWordRangeAtPosition API in ELM & PHP
-                if (document.languageId === "elm" || document.languageId === 'php' ) {
-                    let k = item.label.replace(word, "");
+                if (document.languageId === "elm" || document.languageId === 'php') {
+                    let k = item.label.slice(word.length);
                     item.filterText = oldWord + k;
                     item.insertText = item.filterText;
                 }
