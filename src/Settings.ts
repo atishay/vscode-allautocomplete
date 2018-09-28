@@ -34,6 +34,7 @@ class SettingsClass {
     updateOnlyOnSave: boolean;
     ignoredWords: string[];
     showCurrentDocument: boolean;
+    showOpenDocuments: boolean;
     cycleOpenDocumentsOnLaunch: boolean;
     defaultWhitespaceSplitter: RegExp;
     maxLines: number;
@@ -50,6 +51,7 @@ class SettingsClass {
         this.defaultWhitespaceSplitter = new RegExp(config.get("whitespace").toString(), "g");
         this.cycleOpenDocumentsOnLaunch = !!config.get("cycleOpenDocumentsOnLaunch");
         this.showCurrentDocument = !!config.get("showCurrentDocument");
+        this.showOpenDocuments = !!config.get("showOpenDocuments");
         this.ignoredWords = config.get("ignoredWords", "").split(this.defaultWhitespaceSplitter);
         this.updateOnlyOnSave = !!config.get("updateOnlyOnSave");
         this.excludeFiles = config.get("excludeFiles").toString();

@@ -60,6 +60,11 @@ class CompletionItemProviderClass {
                     return;
                 }
             }
+            if (!Settings.showOpenDocuments) {
+                if (doc !== document) {
+                    return;
+                }
+            }
             let words = trie.find(word);
             if (words) {
                 results = results.concat(words);

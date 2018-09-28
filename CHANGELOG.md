@@ -1,4 +1,7 @@
 # Change Log
+### 0.0.17
+* Add option showOpenDocuments which allows disabling autocomplete items from other open documents (#24)
+
 ### 0.0.16
 * Fix issues in PHP and ELM related to case sensitivity.
 

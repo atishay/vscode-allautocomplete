@@ -2,7 +2,7 @@
     "name": "All-Autocomplete",
     "displayName": "All Autocomplete",
     "description": "Create autocomplete items from open files in VSCode.",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
@@ -114,6 +114,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Show results from the current document in the autocomplete results(Disable to improve performance)."
+                },
+                "AllAutocomplete.showOpenDocuments": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show results from the other open document in the autocomplete results(Disable to have results only from the current document if showCurrentDocument is true)."
                 },
                 "AllAutocomplete.ignoredWords": {
                     "type": "string",
