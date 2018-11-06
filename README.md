@@ -30,6 +30,17 @@ This extension has the following settings:
 * `AllAutocomplete.languageSpecialCharacters`: Regex for finding special characters that languages treat differently in autocomplete. For example, `.` in CSS.
 * `AllAutocomplete.wordListFiles`: Array of strings that represent path to files that behave as if they are always open. These can be used as stores for headers, word lists etc. for autocomplete. Absolute paths can be used here or if the workspace consists of a single folder, relative paths to the folder can also be used.
 
+## Suggestions in comments/strings
+* Autocomplete can provide suggestions within suggestions/strings. To get those, please enable the following settings:
+```
+  // Controls whether suggestions should automatically show up while typing.
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  }
+ ```
+
 ## Needs Suggestions
 
 If you feel that the whitespace splitter is wrong in some language, please report a github issue or better a pull request with the correct regex in package.json.
