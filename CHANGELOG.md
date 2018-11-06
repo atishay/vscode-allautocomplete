@@ -1,4 +1,7 @@
 # Change Log
+### Future Version
+* Update dependencies.
+
 ### 0.0.17
 * Add option showOpenDocuments which allows disabling autocomplete items from other open documents (#24)
 
