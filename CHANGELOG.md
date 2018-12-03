@@ -1,6 +1,9 @@
 # Change Log
 ### Future Version
+
+### 0.0.18
 * Update dependencies.
+* Add settings for CSV
 
 ### 0.0.17
 * Add option showOpenDocuments which allows disabling autocomplete items from other open documents (#24)
