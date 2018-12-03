@@ -69,7 +69,8 @@
                         "html": "[^\\w\\-_\\$\\u0080-\\uFFFF]+",
                         "python": "[^\\w\\-_\\u0080-\\uFFFF]+",
                         "elm": "[^\\w\\-_\\u0080-\\uFFFF]+",
-                        "cpp": "[^\\w_\\u0080-\\uFFFF]+"
+                        "cpp": "[^\\w_\\u0080-\\uFFFF]+",
+                        "csv": "[^\\w_\\u0080-\\uFFFF \\:]+"
                     }
                 },
                 "AllAutocomplete.languageSpecialCharacters": {
@@ -77,7 +78,8 @@
                     "description": "Language specific special characters that can be a part of autocompletion(that can fit with all strings)",
                     "default": {
                         "css": "^[\\.#]",
-                        "scss": "^[\\.#]"
+                        "scss": "^[\\.#]",
+                        "csv": "^[\\: ]"
                     }
                 },
                 "AllAutocomplete.minWordLength": {
