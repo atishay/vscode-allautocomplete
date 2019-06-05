@@ -63,7 +63,7 @@ class SettingsClass {
             this.wordListFiles = [];
         }
         this.wordListFiles = this.wordListFiles.map((file) => path.resolve(vscode.workspace.rootPath, file));
-        let languageWhitespace = config.get("languageWhitespace");
+        let languageWhitespace:any = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {
             try {
@@ -72,7 +72,7 @@ class SettingsClass {
                 console.log(`Invalid regex for ${key}: ${languageWhitespace[key]}`)
             }
         }
-        let languageSpecialCharacters = config.get("languageSpecialCharacters");
+        let languageSpecialCharacters:any = config.get("languageSpecialCharacters");
         this.languageSpecialCharacters = new Map<string, RegExp>();
         for (let key in languageSpecialCharacters) {
             this.languageSpecialCharacters[key] = new RegExp(languageSpecialCharacters[key], "g");

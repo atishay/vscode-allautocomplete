@@ -1,5 +1,7 @@
 # Change Log
-### Future Version
+
+### 0.0.19
+* Update dependencies
 
 ### 0.0.18
 * Update dependencies.
