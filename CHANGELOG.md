@@ -1,4 +1,6 @@
 # Change Log
+### 0.0.20
+* Fix installation issues.
 
 ### 0.0.19
 * Update dependencies
