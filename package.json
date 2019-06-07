@@ -6,7 +6,7 @@
     "publisher": "Atishay-Jain",
     "license": "MIT",
     "engines": {
-        "vscode": "1.34.0"
+        "vscode": "^1.34.0"
     },
     "categories": [
         "Other"
