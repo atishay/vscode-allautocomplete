@@ -50,6 +50,9 @@
         "configurationDefaults": {
             "[markdown]": {
                 "editor.quickSuggestions": true
+            },
+            "[yaml]": {
+                "editor.quickSuggestions": true
             }
         },
         "configuration": {
