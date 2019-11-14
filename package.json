@@ -152,6 +152,11 @@
                     "type": "array",
                     "default": [],
                     "description": "List of languages that do not supply word lists but can consume words from All Autocomplete."
+                },
+                "AllAutocomplete.nonContributingToSelfLanguages": {
+                    "type": "array",
+                    "default": [],
+                    "description": "List of languages that do not supply word lists to the files of the same language but can consume words from All Autocomplete as well as supply word lists to other files."
                 }
             }
         }

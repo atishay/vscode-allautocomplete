@@ -54,11 +54,15 @@ class CompletionItemProviderClass {
 
         word = word.replace(whitespaceSplitter, '');
         let results = [];
+        const nonContributingToSelf = Settings.nonContributingToSelfLanguages.includes(document.languageId);
         WordList.forEach((trie, doc) => {
             if (!Settings.showCurrentDocument) {
                 if (doc === document) {
                     return;
                 }
+            }
+            if (nonContributingToSelf && doc.languageId === document.languageId) {
+                return;
             }
             if (!Settings.showOpenDocuments) {
                 if (doc !== document) {

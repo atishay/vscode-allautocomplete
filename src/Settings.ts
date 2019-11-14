@@ -44,6 +44,7 @@ class SettingsClass {
     languageSpecialCharacters: Map<String, RegExp>;
     maxItemsInSingleList: number;
     nonContributingLanguages: Array<string>;
+    nonContributingToSelfLanguages: Array<string>;
     init() {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
         this.maxItemsInSingleList = Number(config.get("maxItemsInSingleList"));
@@ -57,6 +58,7 @@ class SettingsClass {
         this.updateOnlyOnSave = !!config.get("updateOnlyOnSave");
         this.excludeFiles = config.get("excludeFiles").toString();
         this.nonContributingLanguages = config.get("nonContributingLanguages") as Array<string>;
+        this.nonContributingToSelfLanguages = config.get("nonContributingToSelfLanguages") as Array<string>;
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page"];
         this.buildInRegexToExclude = [/^extension\-output\-#[0-9]+$/];
         if (Array.isArray(config.get("wordListFiles"))) {

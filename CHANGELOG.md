@@ -3,6 +3,7 @@
 * Update dependencies.
 * Add `YAML` and `Plain Text` to autocompleted languages
 * Add support for `AllAutocomplete.nonContributingLanguages` for excluding certain languages from contributing words.
+* Add support for `AllAutocomplete.nonContributingToSelfLanguages` for having languages that provide autocomplete words to all languages apart from their own documents. The default list is empty. Requesting the community try out this feature.
 ### 0.0.20
 * Fix installation issues.
 
