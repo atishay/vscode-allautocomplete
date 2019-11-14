@@ -8,5 +8,5 @@ tsconfig.json
 vsc-extension-quickstart.md
 node_modules
 out/
-webpack.config.json
+webpack.config.js
 
