@@ -1,4 +1,8 @@
 # Change Log
+### 0.0.21
+* Update dependencies.
+* Add `YAML` and `Plain Text` to autocompleted languages
+* Add support for `AllAutocomplete.nonContributingLanguages` for excluding certain languages from contributing words.
 ### 0.0.20
 * Fix installation issues.
 

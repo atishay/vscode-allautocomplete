@@ -29,6 +29,7 @@ This extension has the following settings:
 * `AllAutocomplete.languageWhitespace`: Regex for splitting whitespace (Language specific). Specify as a map with a language ID and regex.
 * `AllAutocomplete.languageSpecialCharacters`: Regex for finding special characters that languages treat differently in autocomplete. For example, `.` in CSS.
 * `AllAutocomplete.wordListFiles`: Array of strings that represent path to files that behave as if they are always open. These can be used as stores for headers, word lists etc. for autocomplete. Absolute paths can be used here or if the workspace consists of a single folder, relative paths to the folder can also be used.
+* `AllAutocomplete.nonContributingLanguages` List oif languages that do not contribute words but can consume words from the autocomplete list.
 
 ## Suggestions in comments/strings
 * Autocomplete can provide suggestions within suggestions/strings. To get those, please enable the following settings:

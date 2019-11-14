@@ -57,6 +57,10 @@ class DocumentManagerClass {
         if (shouldExcludeFile(document.fileName)) {
             return;
         }
+        // We don't parse non contributing languages.
+        if (Settings.nonContributingLanguages.includes(document.languageId)) {
+            return;
+        }
         // Don't parse a document already present. The existing document
         // case takes place when
         if (WordList.has(document)) {

@@ -53,6 +53,9 @@
             },
             "[yaml]": {
                 "editor.quickSuggestions": true
+            },
+            "[plaintext]": {
+                "editor.quickSuggestions": true
             }
         },
         "configuration": {
@@ -144,6 +147,11 @@
                     "type": "array",
                     "default": [],
                     "description": "List of files to initialize the word list from. These files behave as if they are always open. Expects an absolute path. Can work with relative path if the workspace contains a single folder."
+                },
+                "AllAutocomplete.nonContributingLanguages": {
+                    "type": "array",
+                    "default": [],
+                    "description": "List of languages that do not supply word lists but can consume words from All Autocomplete."
                 }
             }
         }
