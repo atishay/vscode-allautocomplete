@@ -157,6 +157,11 @@
                     "type": "array",
                     "default": [],
                     "description": "List of languages that do not supply word lists to the files of the same language but can consume words from All Autocomplete as well as supply word lists to other files."
+                },
+                "AllAutocomplete.dontContributeToSelf": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Forces all languages to not show up words from the same language. This removes All AutoComplete for the same language files. Useful if relying on the language server and need to use all autocomplete only across languages. Equivalent to putting all languages in AllAutocomplete.nonContributingToSelfLanguages"
                 }
             }
         }

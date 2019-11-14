@@ -54,7 +54,7 @@ class CompletionItemProviderClass {
 
         word = word.replace(whitespaceSplitter, '');
         let results = [];
-        const nonContributingToSelf = Settings.nonContributingToSelfLanguages.includes(document.languageId);
+        const nonContributingToSelf = Settings.dontContributeToSelf || Settings.nonContributingToSelfLanguages.includes(document.languageId);
         WordList.forEach((trie, doc) => {
             if (!Settings.showCurrentDocument) {
                 if (doc === document) {
