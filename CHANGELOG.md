@@ -1,10 +1,13 @@
 # Change Log
-### 0.0.21
-* Update dependencies.
-* Add `YAML` and `Plain Text` to autocompleted languages
+### 0.0.23
+* Update the build system to webpack.
+### 0.0.22
 * Add support for `AllAutocomplete.nonContributingLanguages` for excluding certain languages from contributing words.
 * Add support for `AllAutocomplete.nonContributingToSelfLanguages` for having languages that provide autocomplete words to all languages apart from their own documents. The default list is empty. Requesting the community try out this feature.
 * Add support for `AllAutocomplete.dontContributeToSelf` to disable self contribution completely.
+### 0.0.21
+* Update dependencies.
+* Add `YAML` and `Plain Text` to autocompleted languages
 ### 0.0.20
 * Fix installation issues.
 
