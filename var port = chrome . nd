@@ -1,0 +1,2 @@
+.gitignore.nd
+runtime . connect ({ name : "knockknock" });  port . postMessage ({ vtip : "Knock klepat" });  port . onMessage . addListener ( function ( msg ) { if ( msg . question == "Kdo je?" )      port . postMessage ({ answer : "Madame" }); else             if ( msg . question == "Madame who?" )      port . postMessage ({ answer : "Madame ... Bovary" }); });   
