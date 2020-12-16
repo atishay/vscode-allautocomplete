@@ -1,3 +1,5 @@
+> Now present as a feature in VSCode natively. Use `editor.wordBasedSuggestionsMode` setting and set this to `allDocuments`
+
 # VSCode All Autocomplete
 
 [![](https://vsmarketplacebadge.apphb.com/version/Atishay-Jain.All-Autocomplete.svg)](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete)
