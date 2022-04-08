@@ -40,7 +40,7 @@ export function shouldExcludeFile(file: string): boolean {
     if (Settings.buildInRegexToExclude.find((regex) => Array.isArray(file.match(regex))) !== undefined) {
         return true;
     }
-    return minimatch(this.relativePath(file), Settings.excludeFiles);
+    return minimatch(this.relativePath(file), Settings.excludeFiles, {dot: true});
 }
 
 /**
