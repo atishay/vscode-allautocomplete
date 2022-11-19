@@ -185,6 +185,6 @@
         "typescript": "^3.5.1",
         "@types/vscode": "^1.40.0",
         "webpack": "^4.29.3",
-        "webpack-cli": "^3.2.3"
+        "webpack-cli": "^3.3.12"
     }
 }
