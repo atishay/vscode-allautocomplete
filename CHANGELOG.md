@@ -1,7 +1,9 @@
 # Change Log
-### 0.0.23
+### 0.0.25
+* Better support for Accént Characters.
+### 0.0.24
 * Update dependencies.
-* Fix warnigns.
+* Fix warnings.
 * Remove the cycle editors hack as the API is now available.
 * Remove rootPath from `wordListFiles`.
 
