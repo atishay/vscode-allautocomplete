@@ -9,4 +9,6 @@ vsc-extension-quickstart.md
 node_modules
 out/
 webpack.config.js
-
+images/header.svg
+images/All-Autocomplete.gif
+images/icon.ai
