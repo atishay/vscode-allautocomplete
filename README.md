@@ -2,7 +2,8 @@
 
 [![](https://raw.githubusercontent.com/atishay/vscode-allautocomplete/master/images/icon.png)](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete)
 
-[View](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete) [Source](https://github.com/atishay/vscode-allautocomplete) [Install](vscode:extension/Atishay-Jain.All-Autocomplete)
+* [View on VS Marketplace](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete) 
+* [View Source](https://github.com/atishay/vscode-allautocomplete)
 
 Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vscode) items based on all open editors.
 
