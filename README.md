@@ -1,6 +1,6 @@
 # VSCode All Autocomplete
 
-[![](https://raw.githubusercontent.com/atishay/vscode-allautocomplete/master/images/icon.png)](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete)
+[![](https://raw.githubusercontent.com/atishay/vscode-allautocomplete/master/images/icon.svg)](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete)
 
 Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vscode) items based on all open editors.
 
