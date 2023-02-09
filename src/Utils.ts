@@ -53,36 +53,3 @@ export function shouldExcludeFile(file: string): boolean {
 export function relativePath(filePath: string) {
     return vscode.workspace.asRelativePath(filePath);
 }
-
-/**
- * Finds active documents by cycling them.
- *
- * @returns
- */
-export function findActiveDocsHack() {
-    // Based on https://github.com/eamodio/vscode-restore-editors/blob/master/src/documentManager.ts#L57
-    return new Promise((resolve, reject) => {
-        let active = vscode.window.activeTextEditor as any;
-        let editor = active;
-        const openEditors: any[] = [];
-        function handleNextEditor() {
-            if (editor !== undefined) {
-                // If we didn't start with a valid editor, set one once we find it
-                if (active === undefined) {
-                    active = editor;
-                }
-
-                openEditors.push(editor);
-            }
-            // window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
-            setTimeout(() => {
-                editor = vscode.window.activeTextEditor;
-                if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve(null);
-                if ((active === undefined && editor === undefined) || editor._id !== active._id) return handleNextEditor();
-                resolve(null);
-            }, 500);
-            vscode.commands.executeCommand('workbench.action.nextEditor')
-        }
-        handleNextEditor();
-    });
-}

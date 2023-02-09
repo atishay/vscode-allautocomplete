@@ -24,9 +24,9 @@ import * as vscode from 'vscode';
 import { CompletionItemProvider } from './CompletionItemProvider';
 import { Settings } from './Settings';
 import { WordList } from './WordList';
-import { shouldExcludeFile, findActiveDocsHack } from './Utils';
+import { shouldExcludeFile } from './Utils';
 import { DocumentManager } from './DocumentManager';
-import { TextDocument, Position, workspace, TextDocumentChangeEvent, Range, window } from "vscode";
+import { TextDocument, workspace, TextDocumentChangeEvent, Range, window } from "vscode";
 
 let content = [];
 /**
@@ -132,7 +132,7 @@ class ActiveDocManager {
             console.log("No index found");
             return;
         }
-        if (e.document !== window.activeTextEditor.document) {
+        if (!window.activeTextEditor || !window.activeTextEditor.document && e.document !== window.activeTextEditor.document) {
             console.log("Unexpected Active Doc. Parsing broken");
             return;
         }
@@ -172,7 +172,7 @@ function handleNewActiveEditor() {
  * @export
  * @param {vscode.ExtensionContext} context
  */
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     Settings.init();
     DocumentManager.init();
 
@@ -194,9 +194,6 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, CompletionItemProvider));
         context.subscriptions.push(vscode.languages.registerCompletionItemProvider("php", CompletionItemProvider, ..."$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
     })
-    context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.cycleDocuments", () => {
-        findActiveDocsHack();
-    }));
     context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.toggleCurrentFile", () => {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
         if (Settings.showCurrentDocument) {
@@ -243,12 +240,21 @@ export function activate(context: vscode.ExtensionContext) {
         DocumentManager.parseDocument(workspace.textDocuments[i]);
     }
 
-    // All open editors are not available: https://github.com/Microsoft/vscode/issues/15178
-    if (Settings.cycleOpenDocumentsOnLaunch) {
-        findActiveDocsHack().then(attachActiveDocListener);
-    } else {
-        attachActiveDocListener();
+    try {
+        for (let tabGroup of window.tabGroups.all) {
+            for (let tab of tabGroup.tabs) {
+                if ((tab.input as unknown as vscode.TabInputText).uri) {
+                    let tabi: vscode.TabInputText = tab.input as vscode.TabInputText;
+                    let document = await workspace.openTextDocument(tabi.uri);
+                    DocumentManager.parseDocument(document);
+                }
+            }
+        }
+    } catch (error) {
+        console.log(error);
     }
+    
+    attachActiveDocListener();
 }
 
 /**

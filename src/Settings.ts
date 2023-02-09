@@ -35,7 +35,6 @@ class SettingsClass {
     ignoredWords: string[];
     showCurrentDocument: boolean;
     showOpenDocuments: boolean;
-    cycleOpenDocumentsOnLaunch: boolean;
     defaultWhitespaceSplitter: RegExp;
     maxLines: number;
     minWordLength: number;
@@ -52,7 +51,6 @@ class SettingsClass {
         this.minWordLength = Number(config.get("minWordLength"));
         this.maxLines = Number(config.get("maxLines"));
         this.defaultWhitespaceSplitter = new RegExp(config.get("whitespace").toString(), "g");
-        this.cycleOpenDocumentsOnLaunch = !!config.get("cycleOpenDocumentsOnLaunch");
         this.showCurrentDocument = !!config.get("showCurrentDocument");
         this.showOpenDocuments = !!config.get("showOpenDocuments");
         this.ignoredWords = config.get("ignoredWords", "").split(this.defaultWhitespaceSplitter);

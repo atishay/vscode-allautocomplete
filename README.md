@@ -13,7 +13,6 @@ Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vsc
 ## Items in the Cmd+P Menu
 
 * `Toggle Suggestions From The Current File`
-* `Cycle Open Editors`
 
 ## Extension Settings
 
@@ -23,7 +22,6 @@ This extension has the following settings:
 * `AllAutocomplete.maxLines`: Maximum number of lines to read from a file.
 * `AllAutocomplete.maxItemsInSingleList`: Maximum number of items sent to autocomplete in a single API call (Autocomplete might not complete more items than this in a call).
 * `AllAutocomplete.whitespace`: Regex to use for splitting whitespace.
-* `AllAutocomplete.cycleOpenDocumentsOnLaunch`: Cycles through open documents on launch to enable autocomplete to include those documents on restore.
 * `AllAutocomplete.showCurrentDocument`: Show results from the current document in the autocomplete results.
 * `AllAutocomplete.ignoredWords`: Words to ignore(separated by AllAutocomplete.whitespace) from autocomplete.
 * `AllAutocomplete.updateOnlyOnSave`: Do not update the autocomplete list unless the document is saved.
@@ -51,12 +49,6 @@ This extension has the following settings:
 If you feel that the whitespace splitter is wrong in some language, please report a github issue or better a pull request with the correct regex in package.json.
 
 ## Known Issues
-
-### Documents do not show up in autocomplete on restore.
-
-Upon restoring Visual Studio, the documents that have never been opened do not appear in autocomplete. ([VSCode Issue#15178](https://github.com/Microsoft/vscode/issues/15178))
-
-Click on open tabs to enable them in the document. Alternatively, you can use the Cmd+P menu and select `Cycle Open Editors`. You can enable this to be done on launch with `AllAutocomplete.cycleOpenDocumentsOnLaunch`.
 
 ### Emmet collision
 

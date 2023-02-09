@@ -37,11 +37,6 @@
     "contributes": {
         "commands": [
             {
-                "command": "AllAutocomplete.cycleDocuments",
-                "title": "Cycle Open Editors",
-                "category": "All Autocomplete"
-            },
-            {
                 "command": "AllAutocomplete.toggleCurrentFile",
                 "title": "Toggle Suggestions From The Current File",
                 "category": "All Autocomplete"
@@ -112,11 +107,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Disable special handling for "
-                },
-                "AllAutocomplete.cycleOpenDocumentsOnLaunch": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Cycles through open documents on launch to enable autocomplete to include those documents on restore. (VSCode Issue#15178)"
                 },
                 "AllAutocomplete.showCurrentDocument": {
                     "type": "boolean",
