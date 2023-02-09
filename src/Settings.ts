@@ -59,7 +59,7 @@ class SettingsClass {
         this.nonContributingLanguages = config.get("nonContributingLanguages") as Array<string>;
         this.nonContributingToSelfLanguages = config.get("nonContributingToSelfLanguages") as Array<string>;
         this.dontContributeToSelf = config.get("dontContributeToSelf", false);
-        this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page"];
+        this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page", "extHostLog"];
         this.buildInRegexToExclude = [/^extension\-output\-#[0-9]+$/];
         if (Array.isArray(config.get("wordListFiles"))) {
             this.wordListFiles = config.get("wordListFiles") as Array<string>;
