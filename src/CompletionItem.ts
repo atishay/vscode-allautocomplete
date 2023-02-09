@@ -38,15 +38,11 @@ export class CompletionItem extends vscode.CompletionItem {
         this.kind = vscode.CompletionItemKind.Text;
         this.count = 1;
         this.file = file;
-    }
-    get detail() {
-        return `${DocumentManager.documentDisplayPath(this.file)} (${this.count})`;
-    }
-    get documentation() {
-        return this.details.join("\n");
+        this.detail = `${DocumentManager.documentDisplayPath(this.file)} (${this.count})`;
+        this.documentation = Array.isArray(this.details) ? this.details.join("\n") : this.detail;
     }
     static copy(item: CompletionItem) {
-        let newItem = new CompletionItem(item.label, item.file);
+        let newItem = new CompletionItem(item.label.toString(), item.file);
         newItem.count = item.count;
         newItem.details = item.details;
         return newItem;

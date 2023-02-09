@@ -21,11 +21,7 @@
 
 'use strict';
 import * as vscode from 'vscode';
-import * as Trie from 'triejs';
-import * as path from 'path';
-import * as minimatch from 'minimatch';
 import { CompletionItemProvider } from './CompletionItemProvider';
-import { CompletionItem } from './CompletionItem'
 import { Settings } from './Settings';
 import { WordList } from './WordList';
 import { shouldExcludeFile, findActiveDocsHack } from './Utils';

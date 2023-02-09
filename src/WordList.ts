@@ -22,8 +22,6 @@
 'use strict';
 import * as vscode from 'vscode';
 import { Settings } from './Settings';
-import * as path from 'path';
-import * as minimatch from 'minimatch';
 import { CompletionItem } from './CompletionItem'
 
 class WordListClass extends Map<vscode.TextDocument, { find: Function }> {

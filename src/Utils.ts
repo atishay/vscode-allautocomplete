@@ -23,7 +23,7 @@
 import * as vscode from 'vscode';
 import { Settings } from './Settings';
 import * as path from 'path';
-import * as minimatch from 'minimatch';
+import minimatch from 'minimatch';
 
 /**
  * Checks if the file is marked for exclusion by the user settings
@@ -40,7 +40,7 @@ export function shouldExcludeFile(file: string): boolean {
     if (Settings.buildInRegexToExclude.find((regex) => Array.isArray(file.match(regex))) !== undefined) {
         return true;
     }
-    return minimatch(this.relativePath(file), Settings.excludeFiles, {dot: true});
+    return minimatch(relativePath(file), Settings.excludeFiles, {dot: true});
 }
 
 /**
@@ -77,9 +77,9 @@ export function findActiveDocsHack() {
             // window.onDidChangeActiveTextEditor should work here but I don't know why it doesn't
             setTimeout(() => {
                 editor = vscode.window.activeTextEditor;
-                if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve();
+                if (editor !== undefined && openEditors.some(_ => _._id === editor._id)) return resolve(null);
                 if ((active === undefined && editor === undefined) || editor._id !== active._id) return handleNextEditor();
-                resolve();
+                resolve(null);
             }, 500);
             vscode.commands.executeCommand('workbench.action.nextEditor')
         }
