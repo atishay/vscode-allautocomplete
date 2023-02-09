@@ -43,6 +43,8 @@ class DocumentManagerClass {
         Settings.wordListFiles.forEach((file) => {
             vscode.workspace.openTextDocument(file).then((document) => {
                 this.parseDocument(document);
+            }).catch(ignore => { 
+                // May not be present in this folder.
             });
         })
 

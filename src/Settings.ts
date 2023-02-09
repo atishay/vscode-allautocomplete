@@ -66,7 +66,12 @@ class SettingsClass {
         } else {
             this.wordListFiles = [];
         }
-        this.wordListFiles = this.wordListFiles.map((file) => path.resolve(vscode.workspace.rootPath, file));
+        let files: Array<string> = [];
+        vscode.workspace.workspaceFolders.forEach(folder => {
+            // TODO: Support schemes properly.
+            this.wordListFiles.forEach((file) => files.push(path.resolve(folder.uri.fsPath, file)));
+        })
+        this.wordListFiles = files;
         let languageWhitespace:any = config.get("languageWhitespace");
         this.languageWhitespace = new Map<string, RegExp>();
         for (let key in languageWhitespace) {

@@ -1,5 +1,11 @@
 # Change Log
 ### 0.0.23
+* Update dependencies.
+* Fix warnigns.
+* Remove the cycle editors hack as the API is now available.
+* Remove rootPath from `wordListFiles`.
+
+### 0.0.23
 * Update the build system to webpack.
 ### 0.0.22
 * Add support for `AllAutocomplete.nonContributingLanguages` for excluding certain languages from contributing words.
