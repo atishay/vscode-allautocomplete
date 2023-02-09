@@ -1,5 +1,3 @@
-> Now present as a feature in VSCode natively. Use `editor.wordBasedSuggestionsMode` setting and set this to `allDocuments`
-
 # VSCode All Autocomplete
 ![](https://raw.githubusercontent.com/atishay/vscode-allautocomplete/master/images/header.svg)
 
@@ -10,6 +8,10 @@ Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vsc
 ## Features
 
 ![](https://cdn.rawgit.com/atishay/vscode-allautocomplete/1ea2b07b/images/All-Autocomplete.gif)
+
+## Native VSCode
+
+Use `editor.wordBasedSuggestionsMode` setting and set this to `allDocuments` to have VSCode to support most of this natively.
 
 ## Items in the Cmd+P Menu
 
