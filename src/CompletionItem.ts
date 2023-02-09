@@ -33,14 +33,16 @@ export class CompletionItem extends vscode.CompletionItem {
     line: number;
     count: number;
     details: String[];
-    constructor(word: string, file: string) {
+    constructor(word: string, file: string, sortText: string = undefined) {
         super(word);
         this.kind = vscode.CompletionItemKind.Text;
         this.count = 1;
         this.file = file;
         this.detail = `${DocumentManager.documentDisplayPath(this.file)} (${this.count})`;
         this.documentation = Array.isArray(this.details) ? this.details.join("\n") : new vscode.MarkdownString(`Used \`${this.count}\` times in \n ${this.file.replaceAll(/\//g, " > ")}`);
+        this.sortText = this.filterText = sortText;
     }
+    
     static copy(item: CompletionItem) {
         let newItem = new CompletionItem(item.label.toString(), item.file);
         newItem.count = item.count;

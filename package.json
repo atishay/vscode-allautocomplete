@@ -163,17 +163,18 @@
         "watch": "webpack --mode none --watch"
     },
     "dependencies": {
-        "triejs": "0.1.5",
-        "minimatch": "6.1.6"
+        "diacritic": "^0.0.2",
+        "minimatch": "6.1.6",
+        "triejs": "0.1.5"
     },
     "devDependencies": {
         "@types/mocha": "*",
         "@types/node": "*",
-        "ts-loader": "*",
+        "@types/vscode": "*",
         "mocha": "*",
+        "ts-loader": "*",
         "tslint": "*",
         "typescript": "*",
-        "@types/vscode": "*",
         "webpack": "*",
         "webpack-cli": "*"
     }

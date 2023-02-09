@@ -21,6 +21,7 @@
 
 'use strict';
 import * as vscode from 'vscode';
+import * as Diacritic from 'diacritic';
 import { Settings } from './Settings';
 import { CompletionItem } from './CompletionItem'
 
@@ -41,17 +42,40 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
         if (word.length >= Settings.minWordLength) {
             let items = trie.find(word);
             let item: CompletionItem;
-            items && items.some(elem => {
-                if (elem.label === word) {
-                    item = elem;
-                    return true;
+            // check for the dialect free verion as well.
+            let cleaned = Diacritic.clean(word);
+            if (cleaned === word) {
+                items && items.some(elem => {
+                    if (elem.label === word) {
+                        item = elem;
+                        return true;
+                    }
+                });
+                if (item) {
+                    item.count++;
+                } else {
+                    item = new CompletionItem(word, document.fileName);
+                    trie.add(word, item);
                 }
-            });
-            if (item) {
-                item.count++;
+                
             } else {
-                item = new CompletionItem(word, document.fileName);
-                trie.add(word, item);
+                let itemList: Array<CompletionItem> = [];
+                items && items.filter(elem => {
+                    if (elem.label === word) {
+                        itemList.push(elem);
+                        return true;
+                    }
+                });
+                if (itemList.length > 0) {
+                    itemList.forEach(item => item.count++);
+                } else {
+                    item = new CompletionItem(word, document.fileName);
+                    trie.add(word, item);
+                    if (cleaned !== word) {
+                        item = new CompletionItem(word, document.fileName, cleaned);
+                        trie.add(word, item);
+                    }
+                }
             }
         }
     }
@@ -64,18 +88,35 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
     removeWord(word: string, trie, document: vscode.TextDocument) {
         word = word.replace(Settings.whitespaceSplitter(document.languageId), '');
         if (word.length >= Settings.minWordLength) {
+            let cleaned = Diacritic.clean(word);
             let items = trie.find(word);
-            let item: CompletionItem;
-            items && items.some(elem => {
-                if (elem.label === word) {
-                    item = elem;
-                    return true;
+            if (cleaned === word) {
+                items = items?.filter(elem => {
+                    return elem.label === word;
+                }) ?? [];
+                if (items.length > 0) {
+                    for (let item of items) {
+                        if (item && item.label === word) {
+                            item.count--;
+                            if (item.count <= 0) {
+                                trie.remove(word);
+                            }
+                        }
+                    }
                 }
-            });
-            if (item && item.label === word) {
-                item.count--;
-                if (item.count <= 0) {
-                    trie.remove(word);
+            } else {
+                let item: CompletionItem;
+                items && items.some(elem => {
+                    if (elem.label === word) {
+                        item = elem;
+                        return true;
+                    }
+                });
+                if (item && item.label === word) {
+                    item.count--;
+                    if (item.count <= 0) {
+                        trie.remove(word);
+                    }
                 }
             }
         }
