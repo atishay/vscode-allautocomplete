@@ -191,9 +191,14 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.languages.getLanguages().then((languages) => {
         languages.push('*');
         languages = languages.filter((x) => x.toLowerCase() !== "php");
-        let schemed = languages.map(x => ({ language: x }));
+        let schemed = [];
+        languages.forEach(x => {
+            schemed.push({ language: x, scheme: 'file' });
+            schemed.push({ language: x, scheme: 'untitled' });
+        });
         context.subscriptions.push(vscode.languages.registerCompletionItemProvider(schemed, CompletionItemProvider));
-        context.subscriptions.push(vscode.languages.registerCompletionItemProvider({ language:"php"}, CompletionItemProvider, ..."$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+        context.subscriptions.push(vscode.languages.registerCompletionItemProvider({ language: "php", scheme: "untitled" }, CompletionItemProvider, ..."$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+        context.subscriptions.push(vscode.languages.registerCompletionItemProvider({ language:"php", scheme:"file"}, CompletionItemProvider, ..."$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
     })
     context.subscriptions.push(vscode.commands.registerCommand("AllAutocomplete.toggleCurrentFile", () => {
         const config = vscode.workspace.getConfiguration('AllAutocomplete');
