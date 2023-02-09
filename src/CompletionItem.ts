@@ -39,7 +39,7 @@ export class CompletionItem extends vscode.CompletionItem {
         this.count = 1;
         this.file = file;
         this.detail = `${DocumentManager.documentDisplayPath(this.file)} (${this.count})`;
-        this.documentation = Array.isArray(this.details) ? this.details.join("\n") : this.detail;
+        this.documentation = Array.isArray(this.details) ? this.details.join("\n") : new vscode.MarkdownString(`Used \`${this.count}\` times in \n ${this.file.replaceAll(/\//g, " > ")}`);
     }
     static copy(item: CompletionItem) {
         let newItem = new CompletionItem(item.label.toString(), item.file);
