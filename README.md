@@ -2,7 +2,7 @@
 
 # VSCode All Autocomplete
 
-[![](https://vsmarketplacebadge.apphb.com/version/Atishay-Jain.All-Autocomplete.svg)](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete)
+[![](https://vsmarketplacebadges.dev/version/Atishay-Jain.AlAll-Autocomplete.svg)](https://marketplace.visualstudio.com/items?itemName=Atishay-Jain.All-Autocomplete)
 
 Provides autocompletion in [Visual Studio Code](https://github.com/Microsoft/vscode) items based on all open editors.
 
