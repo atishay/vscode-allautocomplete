@@ -157,20 +157,28 @@
         }
     },
     "main": "./dist/extension",
+    "browser": "./dist/extension-web",
     "scripts": {
         "vscode:prepublish": "webpack --mode production",
         "compile": "webpack --mode none",
-        "watch": "webpack --mode none --watch"
+        "watch": "webpack --mode none --watch",
+        "compile-web": "webpack",
+        "watch-web": "webpack --watch",
+        "package-web": "webpack --mode production --devtool hidden-source-map",
+        "test-web": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=.",
+        "postversion": "git push && git push --tags"
     },
     "dependencies": {
         "diacritic": "^0.0.2",
         "minimatch": "6.1.6",
-        "triejs": "0.1.5"
+        "triejs": "0.1.5",
+        "vscode-uri": "^3.0.7"
     },
     "devDependencies": {
         "@types/mocha": "*",
         "@types/node": "*",
         "@types/vscode": "*",
+        "@vscode/test-web": "^0.0.34",
         "mocha": "*",
         "ts-loader": "*",
         "tslint": "*",

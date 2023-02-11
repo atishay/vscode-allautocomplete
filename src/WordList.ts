@@ -54,7 +54,7 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
                 if (item) {
                     item.count++;
                 } else {
-                    item = new CompletionItem(word, document.fileName);
+                    item = new CompletionItem(word, document.uri);
                     trie.add(word, item);
                 }
                 
@@ -69,10 +69,10 @@ class WordListClass extends Map<vscode.TextDocument, { find: Function }> {
                 if (itemList.length > 0) {
                     itemList.forEach(item => item.count++);
                 } else {
-                    item = new CompletionItem(word, document.fileName);
+                    item = new CompletionItem(word, document.uri);
                     trie.add(word, item);
                     if (cleaned !== word) {
-                        item = new CompletionItem(word, document.fileName, cleaned);
+                        item = new CompletionItem(word, document.uri, cleaned);
                         trie.add(word, item);
                     }
                 }

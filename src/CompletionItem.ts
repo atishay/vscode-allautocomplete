@@ -29,17 +29,17 @@ import { DocumentManager } from './DocumentManager';
  * @extends {vscode.CompletionItem}
  */
 export class CompletionItem extends vscode.CompletionItem {
-    file: string;
+    file: vscode.Uri;
     line: number;
     count: number;
     details: String[];
-    constructor(word: string, file: string, sortText: string = undefined) {
+    constructor(word: string, file: vscode.Uri, sortText: string = undefined) {
         super(word);
         this.kind = vscode.CompletionItemKind.Text;
         this.count = 1;
         this.file = file;
         this.detail = `${DocumentManager.documentDisplayPath(this.file)} (${this.count})`;
-        this.documentation = Array.isArray(this.details) ? this.details.join("\n") : new vscode.MarkdownString(`Used \`${this.count}\` times in \n ${this.file.replaceAll(/\//g, " > ")}`);
+        this.documentation = Array.isArray(this.details) ? this.details.join("\n") : new vscode.MarkdownString(`Used \`${this.count}\` times in \n ${this.file.path.replaceAll(/\//g, " > ")}`);
         this.sortText = this.filterText = sortText;
     }
     

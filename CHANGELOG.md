@@ -1,4 +1,6 @@
 # Change Log
+### 0.0.26
+* Add support for VSCode web
 ### 0.0.25
 * Better support for Accént Characters.
 ### 0.0.24

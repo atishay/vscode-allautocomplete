@@ -21,7 +21,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as Trie from 'triejs';
-import * as path from 'path';
+import { Utils, URI} from 'vscode-uri'
 import { Settings } from './Settings';
 import { WordList } from './WordList';
 import { shouldExcludeFile, relativePath } from './Utils';
@@ -54,7 +54,7 @@ class DocumentManagerClass {
      * @memberof DocumentManagerClass
      */
     parseDocument(document: vscode.TextDocument) {
-        if (shouldExcludeFile(document.fileName)) {
+        if (shouldExcludeFile(document.uri)) {
             return;
         }
         // We don't parse non contributing languages.
@@ -76,12 +76,12 @@ class DocumentManagerClass {
             });
         }
         WordList.set(document, trie);
-        let filename = relativePath(document.fileName);
-        let basename = path.basename(filename);
-        let extension = path.extname(filename);
+        let filename = relativePath(document.uri);
+        let basename = Utils.basename(document.uri);
+        let extension = Utils.extname(document.uri);
 
         // Add the current document name to the trie.
-        WordList.addWord(path.basename(filename, extension), trie, document);
+        WordList.addWord(`${basename}${extension ? "." + extension : ""}`, trie, document);
 
         if (this.files[basename]) {
             this.files[basename].push(filename);
@@ -103,7 +103,7 @@ class DocumentManagerClass {
      * @returns relative path to show
      * @memberof DocumentManagerClass
      */
-    documentDisplayPath(docPath: string) {
+    documentDisplayPath(docPath: vscode.Uri) {
         return this.paths[relativePath(docPath)];
     }
 
@@ -125,7 +125,7 @@ class DocumentManagerClass {
      *@memberof DocumentManagerClass
      */
     clearDocument(document: vscode.TextDocument) {
-        if (Settings.wordListFiles.indexOf(document.fileName) !== -1) {
+        if (Settings.wordListFiles.indexOf(document.uri) !== -1) {
             // Cannot clear this special document.
             return;
         }
@@ -141,8 +141,8 @@ class DocumentManagerClass {
      */
     private clearDocumentInternal(document: vscode.TextDocument) {
         WordList.delete(document);
-        let filename = relativePath(document.fileName);
-        let basename = path.basename(filename);
+        let filename = relativePath(document.uri);
+        let basename = Utils.basename(document.uri);
         delete this.paths[filename];
         if (!this.files[basename]) {
             return;

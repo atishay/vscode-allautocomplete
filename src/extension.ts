@@ -48,7 +48,7 @@ class ActiveDocManager {
         }
         content = [];
         let doc = window.activeTextEditor.document;
-        if (shouldExcludeFile(doc.fileName)) {
+        if (shouldExcludeFile(doc.uri)) {
             return;
         }
         for (let i = 0; i < doc.lineCount; ++i) {
@@ -232,7 +232,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
-        if (shouldExcludeFile(e.document.fileName)) {
+        if (shouldExcludeFile(e.document.uri)) {
             return;
         }
         if (!Settings.updateOnlyOnSave && Settings.showCurrentDocument && e.contentChanges.length > 0) {

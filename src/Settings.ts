@@ -19,8 +19,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 'use strict';
-import * as path from 'path';
 import * as vscode from 'vscode';
+import { Utils } from 'vscode-uri';
 
 /**
  * Utility class to hold all settings.
@@ -38,7 +38,7 @@ class SettingsClass {
     defaultWhitespaceSplitter: RegExp;
     maxLines: number;
     minWordLength: number;
-    wordListFiles: Array<string>
+    wordListFiles: Array<vscode.Uri>
     languageWhitespace: Map<String, RegExp>;
     languageSpecialCharacters: Map<String, RegExp>;
     maxItemsInSingleList: number;
@@ -61,15 +61,23 @@ class SettingsClass {
         this.dontContributeToSelf = config.get("dontContributeToSelf", false);
         this.buildInFilesToExclude = ["settings", "settings/editor", "vscode-extensions", "vs_code_welcome_page", "extHostLog", "configurationDefaults"];
         this.buildInRegexToExclude = [/^extension\-output\-#[0-9]+$/];
+        let wordLists = [];
         if (Array.isArray(config.get("wordListFiles"))) {
-            this.wordListFiles = config.get("wordListFiles") as Array<string>;
+            wordLists = config.get("wordListFiles") as Array<vscode.Uri>;
         } else {
             this.wordListFiles = [];
         }
-        let files: Array<string> = [];
+        let files: Array<vscode.Uri> = [];
         vscode.workspace.workspaceFolders.forEach(folder => {
-            // TODO: Support schemes properly.
-            this.wordListFiles.forEach((file) => files.push(path.resolve(folder.uri.fsPath, file)));
+            wordLists.forEach((file: string) => {
+                if (file.match(/^A-Za-z\:\//)) { // Begins with C: or / for win/unix
+                    files.push(vscode.Uri.file(file));
+                } else if (file.match(/^(https?)|(ftps?)/)) { 
+                    files.push(vscode.Uri.parse(file));
+                } else {
+                    files.push(Utils.resolvePath(folder.uri, file))
+                }
+            });
         })
         this.wordListFiles = files;
         let languageWhitespace:any = config.get("languageWhitespace");

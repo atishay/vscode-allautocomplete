@@ -22,8 +22,8 @@
 'use strict';
 import * as vscode from 'vscode';
 import { Settings } from './Settings';
-import * as path from 'path';
 import minimatch from 'minimatch';
+import { Utils } from 'vscode-uri';
 
 /**
  * Checks if the file is marked for exclusion by the user settings
@@ -32,12 +32,12 @@ import minimatch from 'minimatch';
  * @param {string} file
  * @returns {boolean}
  */
-export function shouldExcludeFile(file: string): boolean {
-    var filename = path.basename(file);
+export function shouldExcludeFile(file: vscode.Uri): boolean {
+    var filename = Utils.basename(file);
     if (Settings.buildInFilesToExclude.indexOf(filename) !== -1) {
         return true;
     }
-    if (Settings.buildInRegexToExclude.find((regex) => Array.isArray(file.match(regex))) !== undefined) {
+    if (Settings.buildInRegexToExclude.find((regex) => Array.isArray(file.path.match(regex))) !== undefined) {
         return true;
     }
     return minimatch(relativePath(file), Settings.excludeFiles, {dot: true});
@@ -50,6 +50,6 @@ export function shouldExcludeFile(file: string): boolean {
  * @param {string} filePath
  * @returns
  */
-export function relativePath(filePath: string) {
+export function relativePath(filePath: vscode.Uri) {
     return vscode.workspace.asRelativePath(filePath);
 }
